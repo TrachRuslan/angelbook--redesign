@@ -1,0 +1,158 @@
+{
+  "Header": {
+    "brand": "AngelBook",
+    "navMemorials": "Memorials",
+    "navMissing": "Missing persons search",
+    "navCreate": "Create",
+    "searchPlaceholder": "Find a person...",
+    "searchAriaLabel": "Search",
+    "languageAriaLabel": "Language selection",
+    "menuAriaLabel": "Menu",
+    "closeMenuAriaLabel": "Close menu",
+    "login": "Sign in",
+    "register": "Register",
+    "myCabinet": "My Cabinet",
+    "signOut": "Sign out"
+  },
+  "Footer": {
+    "brand": "AngelBook",
+    "description": "A space of quiet remembrance — where the stories of loved ones are preserved with dignity, warmth, and care for future generations.",
+    "navigation": "Navigation",
+    "legal": "Legal",
+    "copyright": "All rights reserved.",
+    "tagline": "Preserve the story",
+    "nav": {
+      "catalog": "Catalog",
+      "createMemorial": "Create memorial",
+      "missing": "Missing persons",
+      "about": "About",
+      "contacts": "Contact"
+    },
+    "legalLinks": {
+      "privacy": "Privacy policy",
+      "terms": "Terms of use"
+    }
+  },
+  "Hero": {
+    "title": "AngelBook",
+    "subtitle": "Preserve the story",
+    "cta": "Create memorial"
+  },
+  "FeaturedMemorials": {
+    "eyebrow": "Recent memorials",
+    "title": "Memories we cherish"
+  },
+  "Features": {
+    "eyebrow": "Features",
+    "title": "A space for remembrance",
+    "candles": {
+      "title": "Virtual candles",
+      "description": "Light a candle as a sign of memory and support for loved ones"
+    },
+    "map": {
+      "title": "Interactive map",
+      "description": "Find the resting place and leave a sign of respect"
+    },
+    "book": {
+      "title": "Book of memories",
+      "description": "Collect stories, photos, and words of gratitude"
+    },
+    "shield": {
+      "title": "Eternal preservation",
+      "description": "Reliably preserve memories for future generations"
+    }
+  },
+  "Memorials": {
+    "title": "Light of memory",
+    "subtitle": "Find the page of a loved one",
+    "searchPlaceholder": "Search by name...",
+    "empty": "Nothing found. Try changing your query.",
+    "candles": "candles",
+    "filters": {
+      "recent": "Recent",
+      "alphabet": "Alphabetical"
+    }
+  },
+  "CreateMemorial": {
+    "step": "Step {current} of {total}",
+    "title": "Create memorial",
+    "subtitle": "Tell us about the person whose memory you want to preserve",
+    "fullName": "First and last name",
+    "fullNamePlaceholder": "e.g. Alexander Ivanov",
+    "birthDate": "Date of birth",
+    "passingDate": "Date of passing",
+    "bio": "Biography",
+    "bioPlaceholder": "Share their story, memories, and what made this person special...",
+    "uploadPhoto": "Upload photo",
+    "uploadPhotoHint": "Drag an image or click to select",
+    "back": "Back",
+    "next": "Continue",
+    "submitting": "Saving..."
+  },
+  "Auth": {
+    "quote": "Memory is how we continue to love those who are no longer with us",
+    "title": "Welcome",
+    "subtitle": "Sign in to create and preserve memorials",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "or": "or",
+    "google": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "Login": {
+    "quote": "Memory is how we continue to love those who are no longer with us",
+    "title": "Welcome",
+    "subtitle": "Sign in to create and preserve memorials",
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Register to create and preserve memorials",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "registerSubmit": "Create account",
+    "loading": "Please wait...",
+    "or": "or",
+    "google": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "register": "Register",
+    "signInLink": "Sign in"
+  },
+  "Missing": {
+    "eyebrow": "Missing persons",
+    "title": "Search for missing",
+    "subtitle": "Help find those who have gone missing",
+    "createCta": "Report a disappearance",
+    "searchPlaceholder": "Search by name...",
+    "empty": "Nothing found. Try changing your query.",
+    "lastSeen": "Last seen",
+    "age": "Age",
+    "years": "years",
+    "reportInfo": "Report information",
+    "status": {
+      "searching": "Searching",
+      "found": "Found"
+    }
+  },
+  "MissingCreate": {
+    "step": "Step {current} of {total}",
+    "title": "Report a disappearance",
+    "subtitle": "Fill in the information to help with the search",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "e.g. John Michael Smith",
+    "age": "Age",
+    "agePlaceholder": "e.g. 34",
+    "location": "Location",
+    "lastLocation": "Last known location",
+    "lastLocationPlaceholder": "City, district, address",
+    "distinctiveFeatures": "Distinctive features",
+    "distinctiveFeaturesPlaceholder": "Height, clothing, tattoos, distinguishing marks...",
+    "disappearanceDate": "Date of disappearance",
+    "uploadPhoto": "Upload photo",
+    "uploadPhotoHint": "Drag an image or click to select",
+    "back": "Back",
+    "next": "Continue",
+    "submit": "Publish profile"
+  }
+}

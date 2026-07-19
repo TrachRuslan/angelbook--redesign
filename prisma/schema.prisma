@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum MissingPersonStatus {
+  SEARCHING
+  FOUND
+}
+
+model User {
+  id           String   @id
+  email        String   @unique
+  passwordHash String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memorials      Memorial[]
+  missingPersons MissingPerson[]
+
+  @@map("users")
+}
+
+model Memorial {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime?
+  dateOfDeath DateTime?
+  biography   String?
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("memorials")
+}
+
+model MissingPerson {
+  id                  String              @id @default(cuid())
+  userId              String
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName            String
+  age                 Int?
+  lastLocation        String?
+  distinctiveFeatures String?
+  status              MissingPersonStatus @default(SEARCHING)
+  disappearanceDate   DateTime?
+  photoUrl            String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@map("missing_persons")
+}

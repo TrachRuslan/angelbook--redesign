@@ -2,8 +2,8 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -21,7 +21,7 @@ const config: Config = {
         ivory: {
           50: "#faf9f6",
           100: "#f5f4f0",
-          200: "#e8e6e0",
+          200: "#e6e4dd",
           300: "#d4d1c8",
         },
         gold: {
@@ -29,6 +29,12 @@ const config: Config = {
           500: "#c4a962",
           600: "#b89b4a",
           700: "#9a7f3a",
+        },
+        steel: {
+          300: "#cbd5e1",
+          400: "#94a3b8",
+          500: "#64748b",
+          600: "#475569",
         },
       },
       borderRadius: {
