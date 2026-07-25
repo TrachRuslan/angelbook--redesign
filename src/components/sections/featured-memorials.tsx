@@ -1,12 +1,31 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { MemorialCard } from "@/components/ui/memorial-card";
-import { MEMORIALS } from "@/lib/memorials-data";
+import { formatMemorialDates } from "@/lib/memorial-format";
 
-export function FeaturedMemorials() {
+export interface FeaturedMemorialItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: Date | string | null;
+  dateOfDeath?: Date | string | null;
+  imageUrl?: string | null;
+  candleCount?: number;
+}
+
+interface FeaturedMemorialsProps {
+  memorials?: FeaturedMemorialItem[];
+}
+
+export function FeaturedMemorials({ memorials = [] }: FeaturedMemorialsProps) {
   const t = useTranslations("FeaturedMemorials");
+  const locale = useLocale();
+
+  if (!memorials || memorials.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-32">
@@ -27,9 +46,25 @@ export function FeaturedMemorials() {
         </motion.div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {MEMORIALS.slice(0, 3).map((memorial, index) => (
-            <MemorialCard key={memorial.id} {...memorial} index={index} />
-          ))}
+          {memorials.slice(0, 6).map((memorial, index) => {
+            const dates = formatMemorialDates(
+              memorial.dateOfBirth ? new Date(memorial.dateOfBirth) : null,
+              memorial.dateOfDeath ? new Date(memorial.dateOfDeath) : null,
+              locale
+            );
+
+            return (
+              <MemorialCard
+                key={memorial.id}
+                id={memorial.id}
+                name={`${memorial.firstName} ${memorial.lastName}`}
+                dates={dates}
+                candles={memorial.candleCount || 0}
+                imageUrl={memorial.imageUrl}
+                index={index}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

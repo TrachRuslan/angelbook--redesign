@@ -1,16 +1,83 @@
 "use client";
 
+import { useState, useTransition, useRef, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-import { Upload } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { toast } from "sonner";
+import { Link, useRouter } from "@/i18n/routing";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { createMissingPersonRecord } from "@/app/actions/missing";
+import { createClient } from "@/utils/supabase/client";
 
 const inputClassName =
-  "w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 transition-all duration-300 hover:border-white/15 hover:bg-black/30 focus:border-gold-500/50 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-gold-500/20";
+  "w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 transition-all duration-300 hover:border-white/15 hover:bg-black/30 focus:border-gold-500/50 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:opacity-50";
 
 export default function CreateMissingPersonPage() {
   const t = useTranslations("MissingCreate");
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [isPending, startTransition] = useTransition();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (!file.type.startsWith("image/")) {
+        toast.error("Пожалуйста, выберите файл изображения (JPEG, PNG, WebP).");
+        return;
+      }
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleClearPhoto = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Capture form data synchronously before any async await
+    const formData = new FormData(e.currentTarget);
+    if (selectedFile) {
+      formData.set("photo", selectedFile);
+    }
+
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      toast.error("Пожалуйста, войдите в систему, чтобы подать объявление о пропаже.");
+      router.push("/login");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const result = await createMissingPersonRecord(formData);
+
+        if (result.error) {
+          toast.error(result.error);
+        } else if (result.id) {
+          toast.success("Заявка отправлена на модерацию. Она появится на сайте после проверки.");
+          router.push("/cabinet");
+        }
+      } catch (err) {
+        console.error("Submission error:", err);
+        toast.error("Произошла ошибка при отправке. Попробуйте еще раз.");
+      }
+    });
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-charcoal-950 px-4 pt-28 pb-24 sm:px-6">
@@ -35,12 +102,7 @@ export default function CreateMissingPersonPage() {
             </p>
           </div>
 
-          <form
-            className="space-y-6"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label
                 htmlFor="fullName"
@@ -53,6 +115,7 @@ export default function CreateMissingPersonPage() {
                 name="fullName"
                 type="text"
                 required
+                disabled={isPending}
                 placeholder={t("fullNamePlaceholder")}
                 className={inputClassName}
               />
@@ -73,6 +136,7 @@ export default function CreateMissingPersonPage() {
                   min={0}
                   max={150}
                   required
+                  disabled={isPending}
                   placeholder={t("agePlaceholder")}
                   className={inputClassName}
                 />
@@ -89,6 +153,7 @@ export default function CreateMissingPersonPage() {
                   name="disappearanceDate"
                   type="date"
                   required
+                  disabled={isPending}
                   className={inputClassName}
                 />
               </div>
@@ -106,6 +171,7 @@ export default function CreateMissingPersonPage() {
                 name="lastLocation"
                 type="text"
                 required
+                disabled={isPending}
                 placeholder={t("lastLocationPlaceholder")}
                 className={inputClassName}
               />
@@ -123,6 +189,7 @@ export default function CreateMissingPersonPage() {
                 name="distinctiveFeatures"
                 rows={5}
                 required
+                disabled={isPending}
                 placeholder={t("distinctiveFeaturesPlaceholder")}
                 className={`${inputClassName} resize-none`}
               />
@@ -132,33 +199,70 @@ export default function CreateMissingPersonPage() {
               <span className="block text-sm font-light tracking-wide text-slate-300/60">
                 {t("uploadPhoto")}
               </span>
-              <label
-                htmlFor="photo"
-                className="group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/10 bg-black/20 px-6 py-16 transition-all duration-300 hover:border-gold-500/30 hover:bg-black/30"
-              >
-                <Upload
-                  className="mb-4 h-12 w-12 text-slate-400/50 transition-colors duration-300 group-hover:text-gold-500/70"
-                  strokeWidth={1.25}
-                />
-                <span className="text-sm font-light tracking-wide text-slate-300/55">
-                  {t("uploadPhotoHint")}
-                </span>
-                <input
-                  id="photo"
-                  name="photo"
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                />
-              </label>
+
+              {previewUrl ? (
+                <div className="relative overflow-hidden rounded-2xl border border-gold-500/30 bg-black/40 p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="h-16 w-16 rounded-xl object-cover"
+                    />
+                    <div className="text-xs text-ivory-100">
+                      <p className="font-medium text-gold-400">{selectedFile?.name}</p>
+                      <p className="text-ivory-200/50">
+                        {((selectedFile?.size || 0) / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClearPhoto}
+                    disabled={isPending}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <label
+                  htmlFor="photo"
+                  className="group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/10 bg-black/20 px-6 py-12 transition-all duration-300 hover:border-gold-500/30 hover:bg-black/30"
+                >
+                  <Upload
+                    className="mb-4 h-10 w-10 text-slate-400/50 transition-colors duration-300 group-hover:text-gold-500/70"
+                    strokeWidth={1.25}
+                  />
+                  <span className="text-sm font-light tracking-wide text-slate-300/55">
+                    {t("uploadPhotoHint")}
+                  </span>
+                  <input
+                    ref={fileInputRef}
+                    id="photo"
+                    name="photo"
+                    type="file"
+                    accept="image/*"
+                    disabled={isPending}
+                    onChange={handleFileSelect}
+                    className="sr-only"
+                  />
+                </label>
+              )}
             </div>
 
             <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-between">
               <Link href="/missing" className={buttonVariants({ variant: "outline" })}>
                 {t("back")}
               </Link>
-              <Button type="submit" size="lg">
-                {t("submit")}
+              <Button type="submit" size="lg" disabled={isPending} className="min-w-[160px] gap-2">
+                {isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Публикация...</span>
+                  </>
+                ) : (
+                  <span>{t("submit")}</span>
+                )}
               </Button>
             </div>
           </form>

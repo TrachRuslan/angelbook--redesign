@@ -36,7 +36,22 @@
   "Hero": {
     "title": "AngelBook",
     "subtitle": "Preserve the story",
-    "cta": "Create memorial"
+    "cta": "Create memorial",
+    "tagline": "The place where memory lives",
+    "findMissing": "Find a missing person.",
+    "preserveMemory": "Preserve the memory of a loved one",
+    "createPage": "Create a page",
+    "freeNoReg": "Free • No registration",
+    "searchPlaceholder": "Search by name..."
+  },
+  "QuickUpload": {
+    "heading": "Information about a missing or deceased person.",
+    "uploadPhoto": "+ Upload photo",
+    "subtext": "Fill out the form for quick search or page creation",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "e.g. John Smith",
+    "dateLabel": "Date of last contact / date of death",
+    "continue": "Continue"
   },
   "FeaturedMemorials": {
     "eyebrow": "Recent memorials",
@@ -71,6 +86,12 @@
     "filters": {
       "recent": "Recent",
       "alphabet": "Alphabetical"
+    },
+    "detail": {
+      "notFound": "Memorial not found",
+      "lightCandle": "Light a candle",
+      "biography": "Biography",
+      "epitaph": "Epitaph"
     }
   },
   "CreateMemorial": {
@@ -87,7 +108,60 @@
     "uploadPhotoHint": "Drag an image or click to select",
     "back": "Back",
     "next": "Continue",
-    "submitting": "Saving..."
+    "submitting": "Saving...",
+    "firstName": "First name",
+    "firstNamePlaceholder": "e.g. Alexander",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "e.g. Ivanov",
+    "epitaph": "Epitaph",
+    "epitaphPlaceholder": "A memorable quote or inscription...",
+    "dropzoneHint": "Drag & drop photo here, or click to browse",
+    "changePhoto": "Change photo",
+    "removePhoto": "Remove photo",
+    "toastSuccess": "Memorial created successfully!",
+    "toastError": "Failed to create memorial. Please try again."
+  },
+  "Cabinet": {
+    "title": "My Cabinet",
+    "subtitle": "Manage your created memorials and personal account",
+    "nav": {
+      "memorials": "My Memorials",
+      "create": "Create Memorial",
+      "settings": "Account Settings"
+    },
+    "stats": {
+      "totalMemorials": "Total Memorials",
+      "totalCandles": "Candles Lit",
+      "accountStatus": "Account Status",
+      "active": "Active"
+    },
+    "table": {
+      "name": "Name",
+      "dates": "Dates",
+      "candles": "Candles",
+      "created": "Created",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View"
+    },
+    "deleteModal": {
+      "title": "Delete Memorial?",
+      "description": "Are you sure you want to delete this memorial? This action cannot be undone.",
+      "confirm": "Yes, Delete",
+      "cancel": "Cancel"
+    },
+    "empty": {
+      "title": "No memorials created yet",
+      "description": "Create your first memorial page to honor the memory of a loved one.",
+      "button": "Create Memorial"
+    },
+    "toast": {
+      "created": "Memorial created successfully!",
+      "updated": "Memorial updated successfully!",
+      "deleted": "Memorial deleted successfully!",
+      "error": "An error occurred. Please try again."
+    }
   },
   "Auth": {
     "quote": "Memory is how we continue to love those who are no longer with us",

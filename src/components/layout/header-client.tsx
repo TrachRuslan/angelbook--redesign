@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { signOut } from "@/app/actions/auth";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { AngelLogo } from "@/components/ui/logo";
 import { Link, routing, usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +37,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
           href="/"
           className="shrink-0 border-0 text-[15px] font-semibold tracking-wide text-ivory-100 shadow-none outline-none ring-0 transition-colors duration-300 hover:text-gold-400 focus:outline-none focus-visible:ring-0 sm:text-base"
         >
-          {t("brand")}
+          <AngelLogo showText className="h-7 w-7" textClassName="font-medium text-ivory-100 text-base" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -105,7 +106,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
           {isAuthenticated ? (
             <div className="hidden items-center gap-2 md:flex">
               <Link
-                href="/memorials"
+                href="/cabinet"
                 className="rounded-full px-4 py-2 text-sm font-light tracking-wide text-ivory-200/60 transition-all duration-300 hover:bg-white/5 hover:text-ivory-100"
               >
                 {t("myCabinet")}
@@ -124,7 +125,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
               >
                 {t("login")}
               </Link>
-              <Link href="/login" className={buttonVariants({ size: "sm" })}>
+              <Link href="/login?tab=register" className={buttonVariants({ size: "sm" })}>
                 {t("register")}
               </Link>
             </div>
@@ -168,7 +169,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
               <>
                 <li>
                   <Link
-                    href="/memorials"
+                    href="/cabinet"
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-4 py-3 text-sm font-light tracking-wide text-ivory-200/60 transition-colors duration-300 hover:bg-white/5 hover:text-ivory-100"
                   >
@@ -201,7 +202,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
                 </li>
                 <li>
                   <Link
-                    href="/login"
+                    href="/login?tab=register"
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-4 py-3 text-sm font-light tracking-wide text-gold-400 transition-colors duration-300 hover:bg-white/5"
                   >

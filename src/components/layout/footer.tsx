@@ -5,11 +5,9 @@ export async function Footer() {
   const t = await getTranslations("Footer");
 
   const navLinks = [
-    { href: "/memorials" as const, label: t("nav.catalog") },
     { href: "/create" as const, label: t("nav.createMemorial") },
     { href: "/missing" as const, label: t("nav.missing") },
     { href: "/about" as const, label: t("nav.about") },
-    { href: "/contacts" as const, label: t("nav.contacts") },
   ];
 
   const legalLinks = [
@@ -19,7 +17,7 @@ export async function Footer() {
 
   return (
     <footer className="relative border-t border-white/5 bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-[#070708]">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
           <div className="space-y-5">
             <Link
@@ -71,9 +69,22 @@ export async function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 sm:flex-row">
-          <p className="text-xs font-light tracking-wide text-ivory-200/35">
-            © {new Date().getFullYear()} AngelBook. {t("copyright")}
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-light tracking-wide text-ivory-200/40 sm:justify-start">
+            <span>© {new Date().getFullYear()} AngelBook. {t("copyright")}</span>
+            <span className="text-white/20">•</span>
+            <span>
+              Powered by{" "}
+              <a
+                href="https://github.com/TrachRuslan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-gold-400 hover:underline"
+              >
+                Ruslan Trach
+              </a>
+            </span>
+          </div>
+
           <p className="text-xs font-light tracking-wide text-ivory-200/25">
             {t("tagline")}
           </p>

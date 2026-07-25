@@ -2,11 +2,14 @@
 
 import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { signIn, signUp } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { FloatingParticles } from "@/components/ui/floating-particles";
 import { cn } from "@/lib/utils";
+import { Mail, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 const inputClassName =
   "w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 transition-all duration-300 hover:border-white/15 hover:bg-white/[0.07] focus:border-gold-500/25 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-gold-500/20";
@@ -36,12 +39,24 @@ function GoogleIcon() {
 
 type AuthMode = "signIn" | "signUp";
 
-export default function LoginPage() {
+function LoginContent() {
   const t = useTranslations("Login");
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+
   const [mode, setMode] = useState<AuthMode>("signIn");
   const [error, setError] = useState<string | null>(null);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (tab === "register") {
+      setMode("signUp");
+    } else {
+      setMode("signIn");
+    }
+  }, [tab]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,8 +71,28 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError(result.error);
+      } else if (result?.requiresConfirmation) {
+        setConfirmationEmail(result.email || null);
       }
     });
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    try {
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/${locale}/cabinet`,
+        },
+      });
+      if (authError) {
+        setError(authError.message);
+      }
+    } catch (e: any) {
+      setError(e.message || "Ошибка входа через Google");
+    }
   };
 
   return (
@@ -92,122 +127,172 @@ export default function LoginPage() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-md"
           >
-            <div className="mb-10 text-center lg:text-left">
-              <h1 className="text-3xl font-light tracking-tight text-ivory-50 sm:text-4xl">
-                {mode === "signIn" ? t("title") : t("registerTitle")}
-              </h1>
-              <p className="mt-3 text-sm font-light tracking-wide text-ivory-200/45">
-                {mode === "signIn" ? t("subtitle") : t("registerSubtitle")}
-              </p>
-            </div>
-
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              {error && (
-                <div
-                  role="alert"
-                  className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-light text-red-200/90"
-                >
-                  {error}
+            {confirmationEmail ? (
+              /* Email Confirmation Notice Screen */
+              <div className="rounded-3xl border border-gold-500/30 bg-black/40 p-8 text-center backdrop-blur-xl">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/30">
+                  <Mail className="h-8 w-8" />
                 </div>
-              )}
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-light tracking-wide text-ivory-200/60"
+                <h2 className="text-2xl font-light text-ivory-50 sm:text-3xl">
+                  Подтвердите ваш Email
+                </h2>
+                <p className="mt-4 text-sm font-light leading-relaxed text-ivory-200/60">
+                  Мы отправили письмо со ссылкой для подтверждения аккаунта на{" "}
+                  <span className="font-medium text-gold-400">{confirmationEmail}</span>.
+                </p>
+                <p className="mt-3 text-xs font-light text-ivory-200/40">
+                  Пожалуйста, перейдите по ссылке в письме. После подтверждения вы сразу вошете в систему.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setConfirmationEmail(null);
+                    setMode("signIn");
+                  }}
+                  className="mt-8 w-full border-gold-500/40 text-gold-300 hover:bg-gold-500/10"
                 >
-                  {t("email")}
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  disabled={isPending}
-                  placeholder="you@example.com"
-                  className={inputClassName}
-                />
+                  Перейти к входу
+                </Button>
               </div>
+            ) : (
+              /* Login / Register Form */
+              <>
+                <div className="mb-10 text-center lg:text-left">
+                  <h1 className="text-3xl font-light tracking-tight text-ivory-50 sm:text-4xl">
+                    {mode === "signIn" ? t("title") : t("registerTitle")}
+                  </h1>
+                  <p className="mt-3 text-sm font-light tracking-wide text-ivory-200/45">
+                    {mode === "signIn" ? t("subtitle") : t("registerSubtitle")}
+                  </p>
+                </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-light tracking-wide text-ivory-200/60"
+                <form className="space-y-5" onSubmit={handleSubmit}>
+                  {error && (
+                    <div
+                      role="alert"
+                      className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-light text-red-200/90"
+                    >
+                      {error}
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-light tracking-wide text-ivory-200/60"
+                    >
+                      {t("email")}
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      disabled={isPending}
+                      placeholder="you@example.com"
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-light tracking-wide text-ivory-200/60"
+                    >
+                      {t("password")}
+                    </label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      autoComplete={
+                        mode === "signIn" ? "current-password" : "new-password"
+                      }
+                      required
+                      minLength={6}
+                      disabled={isPending}
+                      placeholder="••••••••"
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : mode === "signIn" ? (
+                      t("submit")
+                    ) : (
+                      t("registerSubmit")
+                    )}
+                  </Button>
+                </form>
+
+                <div className="relative my-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/10" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-charcoal-950 px-4 text-xs font-light tracking-wide text-ivory-200/35">
+                      {t("or")}
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="w-full gap-3"
+                  disabled={isPending}
+                  onClick={handleGoogleSignIn}
                 >
-                  {t("password")}
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete={
-                    mode === "signIn" ? "current-password" : "new-password"
-                  }
-                  required
-                  minLength={6}
-                  disabled={isPending}
-                  placeholder="••••••••"
-                  className={inputClassName}
-                />
-              </div>
+                  <GoogleIcon />
+                  {t("google")}
+                </Button>
 
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full"
-                disabled={isPending}
-              >
-                {isPending
-                  ? t("loading")
-                  : mode === "signIn"
-                    ? t("submit")
-                    : t("registerSubmit")}
-              </Button>
-            </form>
-
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-charcoal-950 px-4 text-xs font-light tracking-wide text-ivory-200/35">
-                  {t("or")}
-                </span>
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="w-full gap-3"
-              disabled={isPending}
-            >
-              <GoogleIcon />
-              {t("google")}
-            </Button>
-
-            <p className="mt-8 text-center text-sm font-light tracking-wide text-ivory-200/40 lg:text-left">
-              {mode === "signIn" ? t("noAccount") : t("hasAccount")}{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setError(null);
-                  setMode(mode === "signIn" ? "signUp" : "signIn");
-                }}
-                disabled={isPending}
-                className={cn(
-                  "text-gold-500/80 transition-colors duration-300 hover:text-gold-400",
-                  isPending && "pointer-events-none opacity-50"
-                )}
-              >
-                {mode === "signIn" ? t("register") : t("signInLink")}
-              </button>
-            </p>
+                <p className="mt-8 text-center text-sm font-light tracking-wide text-ivory-200/40 lg:text-left">
+                  {mode === "signIn" ? t("noAccount") : t("hasAccount")}{" "}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setError(null);
+                      setMode(mode === "signIn" ? "signUp" : "signIn");
+                    }}
+                    disabled={isPending}
+                    className={cn(
+                      "text-gold-500/80 transition-colors duration-300 hover:text-gold-400",
+                      isPending && "pointer-events-none opacity-50"
+                    )}
+                  >
+                    {mode === "signIn" ? t("register") : t("signInLink")}
+                  </button>
+                </p>
+              </>
+            )}
           </motion.div>
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-charcoal-950">
+          <Loader2 className="h-8 w-8 animate-spin text-gold-400" />
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }

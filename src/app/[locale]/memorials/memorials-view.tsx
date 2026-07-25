@@ -35,7 +35,7 @@ export function MemorialsView({ memorials }: MemorialsViewProps) {
         memorial.dateOfDeath,
         locale
       ),
-      candles: 0,
+      candles: memorial.candleCount || 0,
       imageUrl: memorial.imageUrl,
       createdAt: memorial.createdAt,
     }));

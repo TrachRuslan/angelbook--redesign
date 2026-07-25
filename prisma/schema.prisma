@@ -16,9 +16,17 @@ enum MissingPersonStatus {
   FOUND
 }
 
+enum PublishStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id           String   @id
   email        String   @unique
+  firstName    String?
+  lastName     String?
   passwordHash String?
   role         UserRole @default(USER)
   createdAt    DateTime @default(now())
@@ -26,24 +34,28 @@ model User {
 
   memorials      Memorial[]
   missingPersons MissingPerson[]
+  supportTickets SupportTicket[]
 
   @@map("users")
 }
 
 model Memorial {
-  id          String    @id @default(cuid())
+  id          String        @id @default(cuid())
   userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName   String
   lastName    String
   dateOfBirth DateTime?
   dateOfDeath DateTime?
   biography   String?
   imageUrl    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  candleCount Int           @default(0)
+  status      PublishStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([userId])
+  @@index([status])
   @@map("memorials")
 }
 
@@ -58,10 +70,40 @@ model MissingPerson {
   status              MissingPersonStatus @default(SEARCHING)
   disappearanceDate   DateTime?
   photoUrl            String?
+  publishStatus       PublishStatus       @default(PENDING)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
 
+  reports MissingReport[]
+
   @@index([userId])
   @@index([status])
+  @@index([publishStatus])
   @@map("missing_persons")
+}
+
+model MissingReport {
+  id              String        @id @default(cuid())
+  missingPersonId String
+  missingPerson   MissingPerson @relation(fields: [missingPersonId], references: [id], onDelete: Cascade)
+  reporterName    String?
+  contactInfo     String
+  message         String
+  createdAt       DateTime      @default(now())
+
+  @@index([missingPersonId])
+  @@map("missing_reports")
+}
+
+model SupportTicket {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message       String
+  adminResponse String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@map("support_tickets")
 }

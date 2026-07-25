@@ -130,7 +130,7 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-charcoal-950 text-ivory-100;
+    @apply bg-gradient-to-b from-[#080d1a] via-charcoal-950 to-charcoal-950 text-ivory-100 min-h-screen;
   }
   html {
     @apply font-sans;
