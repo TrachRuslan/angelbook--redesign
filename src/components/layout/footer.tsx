@@ -75,12 +75,12 @@ export async function Footer() {
             <span>
               Powered by{" "}
               <a
-                href="https://github.com/TrachRuslan"
+                href="https://t.me/INDI1XX"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-gold-400 hover:underline"
               >
-                Ruslan Trach
+                INDI
               </a>
             </span>
           </div>
