@@ -24,6 +24,7 @@ interface CreateMemorialFormProps {
     dateOfBirth?: string | Date | null;
     dateOfDeath?: string | Date | null;
     biography?: string | null;
+    epitaph?: string | null;
     imageUrl?: string | null;
   };
   onSuccess?: () => void;
@@ -55,7 +56,7 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
       ? new Date(initialData.dateOfDeath).toISOString().split("T")[0]
       : "",
     biography: initialData?.biography || "",
-    epitaph: "",
+    epitaph: initialData?.epitaph || "",
   });
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -156,17 +157,14 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
           }
         }
 
-        const fullBio = formData.epitaph.trim()
-          ? `${formData.biography.trim()}\n\n"${formData.epitaph.trim()}"`
-          : formData.biography.trim();
-
         const result = await createMemorialRecord({
           id: initialData?.id,
           firstName: formData.firstName,
           lastName: formData.lastName,
           dateOfBirth: formData.birthDate || null,
           dateOfDeath: formData.deathDate || null,
-          biography: fullBio || null,
+          biography: formData.biography.trim() || null,
+          epitaph: formData.epitaph.trim() || null,
           imageUrl: finalImageUrl,
         });
 

@@ -48,6 +48,7 @@ model Memorial {
   dateOfBirth DateTime?
   dateOfDeath DateTime?
   biography   String?
+  epitaph     String?
   imageUrl    String?
   candleCount Int           @default(0)
   status      PublishStatus @default(PENDING)

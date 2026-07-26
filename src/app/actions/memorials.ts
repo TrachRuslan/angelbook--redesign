@@ -19,6 +19,7 @@ export interface MemorialInputData {
   dateOfBirth?: string | null;
   dateOfDeath?: string | null;
   biography?: string | null;
+  epitaph?: string | null;
   imageUrl?: string | null;
 }
 
@@ -140,6 +141,7 @@ export async function createMemorialRecord(
           dateOfBirth: dateOfBirth && !isNaN(dateOfBirth.getTime()) ? dateOfBirth : null,
           dateOfDeath: dateOfDeath && !isNaN(dateOfDeath.getTime()) ? dateOfDeath : null,
           biography: data.biography?.trim() || null,
+          epitaph: data.epitaph?.trim() || null,
           imageUrl: data.imageUrl || null,
           status: "PENDING", // Require re-moderation upon edit
         },
@@ -153,6 +155,7 @@ export async function createMemorialRecord(
           dateOfBirth: dateOfBirth && !isNaN(dateOfBirth.getTime()) ? dateOfBirth : null,
           dateOfDeath: dateOfDeath && !isNaN(dateOfDeath.getTime()) ? dateOfDeath : null,
           biography: data.biography?.trim() || null,
+          epitaph: data.epitaph?.trim() || null,
           imageUrl: data.imageUrl || null,
           status: "PENDING",
         },

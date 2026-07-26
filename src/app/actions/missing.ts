@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getLocale } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import { uploadMemorialImage, MemorialActionResult } from "@/app/actions/memorials";
+import { sendEmail } from "@/lib/email";
 
 export async function createMissingPersonRecord(
   formData: FormData
@@ -125,14 +126,42 @@ export async function submitMissingReport(data: {
       return { error: "Пожалуйста, укажите контактную информацию и текст сообщения." };
     }
 
-    await prisma.missingReport.create({
+    const report = await prisma.missingReport.create({
       data: {
         missingPersonId: data.missingPersonId,
         reporterName: data.reporterName?.trim() || "Аноним",
         contactInfo: data.contactInfo.trim(),
         message: data.message.trim(),
       },
+      include: {
+        missingPerson: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
+
+    // Notify the author of the missing person post
+    if (report.missingPerson?.user?.email) {
+      await sendEmail({
+        to: report.missingPerson.user.email,
+        subject: `Получена информация о зниклом человеке: ${report.missingPerson.fullName} | AngelBook`,
+        html: `
+          <h1>Здравствуйте, ${report.missingPerson.user.firstName || "пользователь"}!</h1>
+          <p>Кто-то оставил сообщение с информацией по вашему объявлению о поиске <strong>${report.missingPerson.fullName}</strong>.</p>
+          <hr/>
+          <p><strong>Отправитель:</strong> ${report.reporterName || "Аноним"}</p>
+          <p><strong>Контакты отправителя:</strong> ${report.contactInfo}</p>
+          <p><strong>Сообщение:</strong></p>
+          <p style="white-space: pre-wrap; background-color: #f5f5f5; padding: 12px; border-radius: 8px; color: #333;">${report.message}</p>
+          <hr/>
+          <p>Вы можете связаться с этим человеком напрямую по указанным контактам.</p>
+          <br/>
+          <p>С уважением,<br/>Команда AngelBook</p>
+        `,
+      });
+    }
 
     return { success: true };
   } catch (error: any) {

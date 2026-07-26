@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
-import { Heart } from "lucide-react";
+import { Heart, Send, Facebook } from "lucide-react";
 import { prisma } from "@/utils/prisma";
 import { formatMemorialDates } from "@/lib/memorial-format";
 import { Button } from "@/components/ui/button";
@@ -97,6 +97,10 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
     locale
   );
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.angelbook.org";
+  const shareUrl = `${baseUrl}/${locale}/memorials/${memorial.id}`;
+  const shareText = `${memorial.firstName} ${memorial.lastName} — Книга памяти`;
+
   return (
     <main className="min-h-screen bg-charcoal-950 pb-24 pt-32">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -145,6 +149,24 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
                 <Heart className="mr-2 h-5 w-5" />
                 {/* Could add a "Follow" or "Remember" feature later */}
               </Button>
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 text-sm font-light text-ivory-200/80 transition-all duration-300 hover:border-gold-500/30 hover:bg-gold-500/10 hover:text-gold-300 gap-2"
+              >
+                <Send className="h-4 w-4 text-sky-400" />
+                <span>Telegram</span>
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 text-sm font-light text-ivory-200/80 transition-all duration-300 hover:border-gold-500/30 hover:bg-gold-500/10 hover:text-gold-300 gap-2"
+              >
+                <Facebook className="h-4 w-4 text-blue-500" />
+                <span>Facebook</span>
+              </a>
             </div>
 
             <div className="space-y-12 pt-8">
@@ -159,22 +181,24 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
                 </div>
               </section>
 
-              <section className="space-y-4">
-                <h2 className="text-sm font-medium uppercase tracking-[0.2em] text-gold-500/40">
-                  {t("detail.epitaph")}
-                </h2>
-                <div className="relative rounded-2xl border border-white/5 bg-white/[0.02] p-8 italic">
-                  <p className="text-center text-xl font-light text-ivory-100/70">
-                    {"..."}
-                  </p>
-                  <div className="absolute -left-2 -top-2 text-4xl text-gold-500/20 font-serif">
-                    &ldquo;
+              {memorial.epitaph && (
+                <section className="space-y-4">
+                  <h2 className="text-sm font-medium uppercase tracking-[0.2em] text-gold-500/40">
+                    {t("detail.epitaph")}
+                  </h2>
+                  <div className="relative rounded-2xl border border-white/5 bg-white/[0.02] p-8 italic">
+                    <p className="text-center text-xl font-light text-ivory-100/70">
+                      {memorial.epitaph}
+                    </p>
+                    <div className="absolute -left-2 -top-2 text-4xl text-gold-500/20 font-serif">
+                      &ldquo;
+                    </div>
+                    <div className="absolute -right-2 -bottom-2 text-4xl text-gold-500/20 font-serif">
+                      &rdquo;
+                    </div>
                   </div>
-                  <div className="absolute -right-2 -bottom-2 text-4xl text-gold-500/20 font-serif">
-                    &rdquo;
-                  </div>
-                </div>
-              </section>
+                </section>
+              )}
             </div>
           </div>
         </div>

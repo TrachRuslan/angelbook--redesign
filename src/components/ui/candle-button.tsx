@@ -6,6 +6,8 @@ import { Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { incrementCandles } from "@/app/actions/candles";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useLocale } from "next-intl";
 
 interface CandleButtonProps {
   memorialId: string;
@@ -28,6 +30,7 @@ export function CandleButton({
   candlesLabel,
   className,
 }: CandleButtonProps) {
+  const locale = useLocale();
   const [isPending, startTransition] = useTransition();
   const [cooldown, setCooldown] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -39,6 +42,23 @@ export function CandleButton({
   );
 
   const handleClick = async () => {
+    // Check localStorage to enforce a 1-hour cooldown across page refreshes
+    const lastLitKey = `candle_lit_${memorialId}`;
+    const lastLit = localStorage.getItem(lastLitKey);
+    if (lastLit) {
+      const elapsed = Date.now() - parseInt(lastLit, 10);
+      const cooldownPeriod = 1 * 60 * 60 * 1000; // 1 hour
+      if (elapsed < cooldownPeriod) {
+        const remainingMinutes = Math.ceil((cooldownPeriod - elapsed) / (60 * 1000));
+        toast.warning(
+          locale === "ru"
+            ? `Вы уже зажгли свечу. Попробуйте снова через ${remainingMinutes} мин.`
+            : `You have already lit a candle. Try again in ${remainingMinutes} min.`
+        );
+        return;
+      }
+    }
+
     if (cooldown || isPending) return;
 
     // Trigger cooldown to prevent spam clicking
@@ -46,6 +66,9 @@ export function CandleButton({
     setTimeout(() => {
       setCooldown(false);
     }, 2000);
+
+    // Save timestamp to localStorage
+    localStorage.setItem(lastLitKey, Date.now().toString());
 
     // Generate premium flame particles
     const newParticles = Array.from({ length: 6 }).map((_, i) => ({
