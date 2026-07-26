@@ -3,7 +3,14 @@ import { setRequestLocale } from "next-intl/server";
 import { prisma } from "@/utils/prisma";
 import { MemorialsView } from "./memorials-view";
 
+import type { Metadata } from "next";
+
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Книги памяти",
+  description: "Список виртуальных мемориалов памяти. Сохраняйте воспоминания, зажигайте свечи и помните близких.",
+};
 
 export default async function MemorialsPage({
   params,

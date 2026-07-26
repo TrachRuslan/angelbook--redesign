@@ -3,12 +3,13 @@
 import { useState, useTransition, useRef, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Link, useRouter } from "@/i18n/routing";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { createMissingPersonRecord } from "@/app/actions/missing";
 import { createClient } from "@/utils/supabase/client";
+import imageCompression from "browser-image-compression";
 
 const inputClassName =
   "w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 transition-all duration-300 hover:border-white/15 hover:bg-black/30 focus:border-gold-500/50 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:opacity-50";
@@ -16,9 +17,11 @@ const inputClassName =
 export default function CreateMissingPersonPage() {
   const t = useTranslations("MissingCreate");
   const router = useRouter();
+  const locale = useLocale();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [isPending, startTransition] = useTransition();
+  const [isCompressing, setIsCompressing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -64,6 +67,24 @@ export default function CreateMissingPersonPage() {
 
     startTransition(async () => {
       try {
+        if (selectedFile) {
+          setIsCompressing(true);
+          let fileToUpload = selectedFile;
+          try {
+            const options = {
+              maxSizeMB: 0.5,
+              maxWidthOrHeight: 1920,
+              useWebWorker: true,
+            };
+            fileToUpload = await imageCompression(selectedFile, options);
+          } catch (compErr) {
+            console.error("Compression error:", compErr);
+          } finally {
+            setIsCompressing(false);
+          }
+          formData.set("photo", fileToUpload);
+        }
+
         const result = await createMissingPersonRecord(formData);
 
         if (result.error) {
@@ -254,11 +275,15 @@ export default function CreateMissingPersonPage() {
               <Link href="/missing" className={buttonVariants({ variant: "outline" })}>
                 {t("back")}
               </Link>
-              <Button type="submit" size="lg" disabled={isPending} className="min-w-[160px] gap-2">
-                {isPending ? (
+              <Button type="submit" size="lg" disabled={isPending || isCompressing} className="min-w-[160px] gap-2">
+                {isPending || isCompressing ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Публикация...</span>
+                    <span>
+                      {isCompressing
+                        ? (locale === "ru" ? "Сжатие фото..." : "Compressing image...")
+                        : "Публикация..."}
+                    </span>
                   </>
                 ) : (
                   <span>{t("submit")}</span>

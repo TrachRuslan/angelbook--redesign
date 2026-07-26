@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { Heart } from "lucide-react";
@@ -11,6 +12,64 @@ interface MemorialPageProps {
     id: string;
     locale: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: MemorialPageProps): Promise<Metadata> {
+  const { id, locale } = await params;
+
+  const memorial = await prisma.memorial.findUnique({
+    where: { id },
+  });
+
+  if (!memorial) {
+    return {
+      title: "Не найдено | AngelBook",
+      description: "Страница памяти не найдена",
+    };
+  }
+
+  const name = `${memorial.firstName} ${memorial.lastName}`;
+  const dates = formatMemorialDates(
+    memorial.dateOfBirth,
+    memorial.dateOfDeath,
+    locale
+  );
+
+  const description = memorial.biography
+    ? `${memorial.biography.substring(0, 160)}...`
+    : `Страница памяти ${name}. ${dates}`;
+
+  const title = `${name} — Книга памяти | AngelBook`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      firstName: memorial.firstName,
+      lastName: memorial.lastName,
+      images: memorial.imageUrl
+        ? [
+            {
+              url: memorial.imageUrl,
+              width: 1200,
+              height: 630,
+              alt: name,
+            },
+          ]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: memorial.imageUrl ? [memorial.imageUrl] : [],
+    },
+  };
 }
 
 export default async function MemorialPage({ params }: MemorialPageProps) {

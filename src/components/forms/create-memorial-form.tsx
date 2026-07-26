@@ -4,13 +4,14 @@ import { useState, useTransition, useRef, DragEvent, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { uploadMemorialImage, createMemorialRecord } from "@/app/actions/memorials";
 import { createClient } from "@/utils/supabase/client";
 import { cn } from "@/lib/utils";
+import imageCompression from "browser-image-compression";
 
 const inputClassName =
   "w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 backdrop-blur-md transition-all duration-300 hover:border-white/15 hover:bg-black/30 focus:border-gold-500/50 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:opacity-50";
@@ -32,8 +33,10 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
   const t = useTranslations("CreateMemorial");
   const cabinetT = useTranslations("Cabinet");
   const router = useRouter();
+  const locale = useLocale();
 
   const [isPending, startTransition] = useTransition();
+  const [isCompressing, setIsCompressing] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
@@ -124,8 +127,24 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
 
         // Upload new image if selected
         if (selectedFile) {
+          setIsCompressing(true);
+          let fileToUpload = selectedFile;
+          try {
+            const options = {
+              maxSizeMB: 0.5,
+              maxWidthOrHeight: 1920,
+              useWebWorker: true,
+            };
+            fileToUpload = await imageCompression(selectedFile, options);
+          } catch (compErr) {
+            console.error("Compression error:", compErr);
+            // Fallback to uncompressed file if compression fails
+          } finally {
+            setIsCompressing(false);
+          }
+
           const uploadFd = new FormData();
-          uploadFd.append("file", selectedFile);
+          uploadFd.append("file", fileToUpload);
           const uploadRes = await uploadMemorialImage(uploadFd);
 
           if (uploadRes.error) {
@@ -346,13 +365,15 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
         <Button
           type="submit"
           size="lg"
-          disabled={isPending}
+          disabled={isPending || isCompressing}
           className="min-w-[160px]"
         >
-          {isPending ? (
+          {isPending || isCompressing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t("submitting")}
+              {isCompressing
+                ? (locale === "ru" ? "Сжатие фото..." : "Compressing image...")
+                : t("submitting")}
             </>
           ) : (
             t("next")

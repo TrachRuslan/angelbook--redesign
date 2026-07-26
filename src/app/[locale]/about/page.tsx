@@ -1,9 +1,16 @@
 import { setRequestLocale } from "next-intl/server";
 import { AngelLogo } from "@/components/ui/logo";
 
+import type { Metadata } from "next";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
+
+export const metadata: Metadata = {
+  title: "О проекте",
+  description: "Узнайте больше о миссии AngelBook, создании мемориалов памяти и поиске пропавших без вести.",
+};
 
 export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;

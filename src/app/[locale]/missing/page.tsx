@@ -7,7 +7,14 @@ import { Link } from "@/i18n/routing";
 import { buttonVariants } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
+import type { Metadata } from "next";
+
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Поиск пропавших без вести",
+  description: "База данных и поиск пропавших без вести людей. Помогите найти пропавших и сообщите имеющуюся информацию.",
+};
 
 interface MissingPersonsPageProps {
   params: Promise<{ locale: string }>;
