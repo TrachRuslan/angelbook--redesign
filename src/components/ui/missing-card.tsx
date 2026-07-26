@@ -30,12 +30,12 @@ const STATUS_STYLES: Record<
 > = {
   SEARCHING: {
     badge:
-      "border-red-500/40 bg-red-500/15 text-red-300 shadow-[0_0_16px_rgba(239,68,68,0.35)]",
+      "border-red-500 bg-red-600 text-white font-semibold shadow-[0_0_20px_rgba(239,68,68,0.5)]",
     glow: "from-red-500/10 via-slate-800/50 to-charcoal-900",
   },
   FOUND: {
     badge:
-      "border-emerald-500/40 bg-emerald-500/15 text-emerald-300 shadow-[0_0_16px_rgba(52,211,153,0.3)]",
+      "border-emerald-500 bg-emerald-600 text-white font-semibold shadow-[0_0_20px_rgba(52,211,153,0.4)]",
     glow: "from-emerald-500/10 via-slate-800/50 to-charcoal-900",
   },
 };
@@ -113,13 +113,21 @@ export function MissingCard({
       >
         <div className="relative h-56 overflow-hidden bg-black/40">
           {photoUrl ? (
-            <Image
-              src={photoUrl}
-              alt={fullName}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            <>
+              <Image
+                src={photoUrl}
+                alt=""
+                fill
+                className="object-cover blur-md opacity-30 scale-110 pointer-events-none"
+              />
+              <Image
+                src={photoUrl}
+                alt={fullName}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-contain transition-transform duration-500 group-hover:scale-105"
+              />
+            </>
           ) : (
             <div
               className={cn(
