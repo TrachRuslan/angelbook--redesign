@@ -24,6 +24,17 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setMobileSearchOpen(false);
+    }
+  };
 
   const switchLocale = (nextLocale: string) => {
     router.replace(pathname, { locale: nextLocale });
@@ -32,7 +43,36 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-white/5 bg-black/30 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
+      {mobileSearchOpen ? (
+        <form
+          onSubmit={handleSearchSubmit}
+          className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8"
+        >
+          <div className="relative flex-1">
+            <Search
+              className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ivory-200/40"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            <input
+              type="search"
+              autoFocus
+              placeholder={t("searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-full border border-white/5 bg-white/5 py-2 pl-11 pr-4 text-sm text-ivory-100 placeholder:text-ivory-200/35 focus:border-gold-500/20 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setMobileSearchOpen(false)}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
+          >
+            <X className="h-4 w-4" strokeWidth={1.5} />
+          </button>
+        </form>
+      ) : (
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="shrink-0 border-0 text-[15px] font-semibold tracking-wide text-ivory-100 shadow-none outline-none ring-0 transition-colors duration-300 hover:text-gold-400 focus:outline-none focus-visible:ring-0 sm:text-base"
@@ -57,7 +97,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
           ))}
         </nav>
 
-        <div className="hidden flex-1 justify-center lg:flex">
+        <form onSubmit={handleSearchSubmit} className="hidden flex-1 justify-center lg:flex">
           <label className="group relative w-full max-w-sm">
             <Search
               className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ivory-200/40 transition-colors duration-300 group-hover:text-ivory-200/60 group-focus-within:text-gold-500/70"
@@ -67,15 +107,18 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
             <input
               type="search"
               placeholder={t("searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-full border border-white/5 bg-white/5 py-2.5 pl-11 pr-4 text-sm text-ivory-100 placeholder:text-ivory-200/35 transition-all duration-300 hover:border-white/10 hover:bg-white/10 focus:border-gold-500/20 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-gold-500/20"
             />
           </label>
-        </div>
+        </form>
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <button
             type="button"
             aria-label={t("searchAriaLabel")}
+            onClick={() => setMobileSearchOpen(true)}
             className="flex h-9 w-9 items-center justify-center rounded-full text-ivory-200/60 transition-all duration-300 hover:bg-white/5 hover:text-ivory-100 lg:hidden"
           >
             <Search className="h-4 w-4" strokeWidth={1.5} />
@@ -145,6 +188,7 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
           </button>
         </div>
       </div>
+    )}
 
       {menuOpen && (
         <nav className="border-t border-white/5 bg-black/40 px-4 py-4 backdrop-blur-md md:hidden">

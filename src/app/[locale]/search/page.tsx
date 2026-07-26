@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
-import { searchMemorials } from "@/app/actions/search";
+import { searchAll } from "@/app/actions/search";
 import { MemorialCard } from "@/components/ui/memorial-card";
+import { MissingCard } from "@/components/ui/missing-card";
 import { formatMemorialDates } from "@/lib/memorial-format";
 import { Search } from "lucide-react";
 
@@ -21,7 +22,7 @@ export default async function SearchPage({
 
   setRequestLocale(locale);
 
-  const results = searchTerm ? await searchMemorials(searchTerm) : [];
+  const results = searchTerm ? await searchAll(searchTerm) : [];
 
   return (
     <main className="min-h-screen bg-charcoal-950 px-4 pt-28 pb-24 sm:px-6 lg:px-8">
@@ -36,31 +37,52 @@ export default async function SearchPage({
             </p>
           ) : (
             <p className="mt-3 text-base font-light text-ivory-200/50">
-              Введите имя или фамилию для поиска по базе мемориалов
+              Введите имя или фамилию для поиска по мемориалам и пропавшим без вести
             </p>
           )}
         </header>
 
         {results.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-            {results.map((memorial, index) => {
-              const dates = formatMemorialDates(
-                memorial.dateOfBirth,
-                memorial.dateOfDeath,
-                locale
-              );
+            {results.map((item, index) => {
+              if (item.type === "memorial") {
+                const dates = formatMemorialDates(
+                  item.dateOfBirth,
+                  item.dateOfDeath,
+                  locale
+                );
 
-              return (
-                <MemorialCard
-                  key={memorial.id}
-                  id={memorial.id}
-                  name={`${memorial.firstName} ${memorial.lastName}`}
-                  dates={dates}
-                  candles={memorial.candleCount || 0}
-                  imageUrl={memorial.imageUrl}
-                  index={index}
-                />
-              );
+                return (
+                  <MemorialCard
+                    key={item.id}
+                    id={item.id}
+                    name={`${item.firstName} ${item.lastName}`}
+                    dates={dates}
+                    candles={item.candleCount || 0}
+                    imageUrl={item.imageUrl}
+                    index={index}
+                  />
+                );
+              } else {
+                return (
+                  <MissingCard
+                    key={item.id}
+                    id={item.id}
+                    fullName={item.fullName}
+                    age={item.age}
+                    lastLocation={item.lastLocation || "Не указано"}
+                    disappearanceDate={
+                      item.disappearanceDate
+                        ? item.disappearanceDate.toISOString()
+                        : new Date().toISOString()
+                    }
+                    status={item.status}
+                    photoUrl={item.photoUrl}
+                    distinctiveFeatures={item.distinctiveFeatures}
+                    index={index}
+                  />
+                );
+              }
             })}
           </div>
         ) : (
