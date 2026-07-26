@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-0L7ZELCZZ7"} />
+        <SpeedInsights />
       </body>
     </html>
   );
