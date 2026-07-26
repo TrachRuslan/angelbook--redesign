@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useRef, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-import { Play, Plus, User, Calendar, ArrowRight, X, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Play, Plus, User, Calendar, ArrowRight, X, Image as ImageIcon, Loader2, BookOpen, UserMinus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/routing";
@@ -144,108 +144,53 @@ export function QuickUploadSection() {
           </div>
 
           {/* Section Header */}
-          <div className="mb-8 text-center sm:text-left">
+          <div className="mb-10 text-center">
             <h2 className="text-2xl font-light tracking-tight text-ivory-50 sm:text-3xl">
-              {t("heading")}
+              Начать работу с AngelBook
             </h2>
+            <p className="mt-2 text-sm font-light text-ivory-200/50">
+              Выберите действие, чтобы продолжить
+            </p>
           </div>
 
-          {/* Upload Button & Quick Form */}
-          <form onSubmit={handleQuickSubmit} className="space-y-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <Button
-                  type="button"
-                  disabled={isPending}
-                  onClick={handleUploadButtonClick}
-                  variant="outline"
-                  className="group h-12 gap-2 border-gold-500/30 bg-gold-500/10 px-6 text-gold-400 hover:bg-gold-500/20"
-                >
-                  <Plus className="h-5 w-5 transition-transform group-hover:rotate-90" />
-                  <span>{t("uploadPhoto")}</span>
-                </Button>
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-
-                {previewUrl && (
-                  <div className="flex items-center gap-2 rounded-2xl border border-gold-500/30 bg-black/40 px-3 py-1.5 text-xs text-gold-300">
-                    <ImageIcon className="h-4 w-4" />
-                    <span>OK</span>
-                    <button
-                      type="button"
-                      onClick={handleClearPhoto}
-                      className="ml-1 text-ivory-200/60 hover:text-red-400"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                )}
+          {/* Dynamic Option Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            {/* Option 1: Memorial */}
+            <motion.button
+              whileHover={{ y: -6, borderColor: "rgba(196,169,98,0.4)", backgroundColor: "rgba(255,255,255,0.03)" }}
+              onClick={() => router.push("/create")}
+              className="group flex flex-col text-left p-6 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md transition-all duration-300 hover:shadow-[0_12px_30px_rgba(196,169,98,0.05)]"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                <BookOpen className="h-5 w-5" />
               </div>
+              <h3 className="text-xl font-light text-ivory-100 group-hover:text-gold-300 transition-colors flex items-center gap-2">
+                Создать мемориал
+                <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+              </h3>
+              <p className="mt-2 text-xs font-light leading-relaxed text-ivory-200/40">
+                Сохраните историю жизни, фотографии и светлые воспоминания об ушедшем близком человеке.
+              </p>
+            </motion.button>
 
-              <span className="text-xs font-light text-ivory-200/40">
-                {t("subtext")}
-              </span>
-            </div>
-
-            {/* Quick Inline Inputs */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="block text-xs font-light tracking-wide text-ivory-200/60 uppercase">
-                  {t("fullNameLabel")} *
-                </label>
-                <div className="relative">
-                  <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ivory-200/30" />
-                  <input
-                    type="text"
-                    required
-                    disabled={isPending}
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder={t("fullNamePlaceholder")}
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 py-3.5 pl-11 pr-4 text-sm text-ivory-100 placeholder:text-ivory-200/30 transition-all duration-300 hover:border-white/20 focus:border-gold-500/40 focus:outline-none focus:ring-1 focus:ring-gold-500/20 disabled:opacity-50"
-                  />
-                </div>
+            {/* Option 2: Missing Person */}
+            <motion.button
+              whileHover={{ y: -6, borderColor: "rgba(131,197,222,0.4)", backgroundColor: "rgba(255,255,255,0.03)" }}
+              onClick={() => router.push("/missing/create")}
+              className="group flex flex-col text-left p-6 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md transition-all duration-300 hover:shadow-[0_12px_30px_rgba(131,197,222,0.05)]"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                <UserMinus className="h-5 w-5" />
               </div>
-
-              <div className="space-y-2">
-                <label className="block text-xs font-light tracking-wide text-ivory-200/60 uppercase">
-                  {t("dateLabel")}
-                </label>
-                <div className="relative">
-                  <Calendar className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ivory-200/30" />
-                  <input
-                    type="date"
-                    disabled={isPending}
-                    value={contactDate}
-                    onChange={(e) => setContactDate(e.target.value)}
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 py-3.5 pl-11 pr-4 text-sm text-ivory-100 transition-all duration-300 hover:border-white/20 focus:border-gold-500/40 focus:outline-none focus:ring-1 focus:ring-gold-500/20 disabled:opacity-50"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-2">
-              <Button type="submit" size="lg" disabled={isPending} className="gap-2 min-w-[140px]">
-                {isPending ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>{t("continue")}</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
+              <h3 className="text-xl font-light text-ivory-100 group-hover:text-sky-300 transition-colors flex items-center gap-2">
+                Сообщить о пропаже
+                <ArrowRight className="h-4 w-4 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+              </h3>
+              <p className="mt-2 text-xs font-light leading-relaxed text-ivory-200/40">
+                Опубликуйте анкету поиска пропавшего человека с указанием возраста, места и примет, чтобы ускорить его розыск.
+              </p>
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     </section>
