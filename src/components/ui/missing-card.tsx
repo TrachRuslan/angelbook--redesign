@@ -111,14 +111,14 @@ export function MissingCard({
         whileHover={{ y: -4 }}
         className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-shadow duration-500 hover:border-white/15 hover:shadow-[0_16px_48px_-12px_rgba(148,163,184,0.18)]"
       >
-        <div className="relative h-56 overflow-hidden bg-black/40">
+        <div className="relative h-72 overflow-hidden bg-black/40">
           {photoUrl ? (
             <Image
               src={photoUrl}
               alt={fullName}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div
