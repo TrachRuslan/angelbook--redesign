@@ -113,21 +113,13 @@ export function MissingCard({
       >
         <div className="relative h-56 overflow-hidden bg-black/40">
           {photoUrl ? (
-            <>
-              <Image
-                src={photoUrl}
-                alt=""
-                fill
-                className="object-cover blur-md opacity-30 scale-110 pointer-events-none"
-              />
-              <Image
-                src={photoUrl}
-                alt={fullName}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-contain transition-transform duration-500 group-hover:scale-105"
-              />
-            </>
+            <Image
+              src={photoUrl}
+              alt={fullName}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
           ) : (
             <div
               className={cn(
