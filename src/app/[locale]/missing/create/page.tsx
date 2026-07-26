@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useRef, ChangeEvent } from "react";
+import NextImage from "next/image";
 import { motion } from "framer-motion";
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -224,9 +225,12 @@ export default function CreateMissingPersonPage() {
               {previewUrl ? (
                 <div className="relative overflow-hidden rounded-2xl border border-gold-500/30 bg-black/40 p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <img
+                    <NextImage
                       src={previewUrl}
                       alt="Preview"
+                      width={64}
+                      height={64}
+                      unoptimized
                       className="h-16 w-16 rounded-xl object-cover"
                     />
                     <div className="text-xs text-ivory-100">

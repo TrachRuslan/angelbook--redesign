@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ShieldAlert,
@@ -279,10 +280,12 @@ export function AdminView({
                     {/* Image */}
                     <div className="relative h-44 w-full md:w-44 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                       {m.imageUrl ? (
-                        <img
+                        <Image
                           src={m.imageUrl}
                           alt={m.firstName}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="176px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-ivory-200/20">
@@ -386,10 +389,12 @@ export function AdminView({
                     {/* Photo */}
                     <div className="relative h-44 w-full md:w-44 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                       {p.photoUrl ? (
-                        <img
+                        <Image
                           src={p.photoUrl}
                           alt={p.fullName}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="176px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-ivory-200/20">

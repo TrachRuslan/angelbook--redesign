@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User as UserIcon,
@@ -331,10 +332,12 @@ export function CabinetView({
                           <div className="flex items-center gap-4">
                             <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-zinc-800">
                               {m.imageUrl ? (
-                                <img
+                                <Image
                                   src={m.imageUrl}
                                   alt={m.firstName}
-                                  className="h-full w-full object-cover"
+                                  fill
+                                  sizes="56px"
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="flex h-full w-full items-center justify-center text-ivory-200/40">
@@ -408,10 +411,12 @@ export function CabinetView({
                           <div className="flex items-center gap-4">
                             <div className="relative h-14 w-14 overflow-hidden rounded-xl border border-white/10 bg-zinc-800">
                               {p.photoUrl ? (
-                                <img
+                                <Image
                                   src={p.photoUrl}
                                   alt={p.fullName}
-                                  className="h-full w-full object-cover"
+                                  fill
+                                  sizes="56px"
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="flex h-full w-full items-center justify-center text-ivory-200/40">

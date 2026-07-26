@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, MapPin, X, Send, Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -112,10 +113,12 @@ export function MissingCard({
       >
         <div className="relative h-56 overflow-hidden bg-black/40">
           {photoUrl ? (
-            <img
+            <Image
               src={photoUrl}
               alt={fullName}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div

@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { HeroLegacy } from "@/components/sections/hero-legacy";
+import Image from "next/image";
 import { QuickUploadSection } from "@/components/sections/quick-upload";
 import { Features } from "@/components/sections/features";
 import { FeaturedMemorials } from "@/components/sections/featured-memorials";
@@ -48,10 +49,13 @@ export default async function Home({
     <div className="relative min-h-screen w-full bg-[#080c14] text-ivory-100 overflow-x-hidden">
       {/* Tall Ethereal Heavenly Sky Background covering Hero & Quick Upload */}
       <div className="absolute top-0 inset-x-0 h-[1650px] pointer-events-none z-0 overflow-hidden">
-        <img
+        <Image
           src="/heavenly-sky.jpg"
           alt="Heavenly Sky Background"
-          className="h-full w-full object-cover object-top filter brightness-105 opacity-90"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-top filter brightness-105 opacity-90"
         />
         {/* Extended Gentle Downward Gradient Transition */}
         <div className="absolute inset-0 bg-gradient-to-b from-sky-950/15 via-[#080c14]/30 to-[#080c14]" />

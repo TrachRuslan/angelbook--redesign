@@ -182,7 +182,6 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
                       type="submit"
                       variant="outline"
                       className="w-full"
-                      onClick={() => setMenuOpen(false)}
                     >
                       {t("signOut")}
                     </Button>
