@@ -39,7 +39,7 @@ export default function RootLayout({
     <html lang="ru" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX"} />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-0L7ZELCZZ7"} />
       </body>
     </html>
   );
