@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { prisma } from "@/utils/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://angelbook.net";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.angelbook.org";
   const locales = ["ru", "en"];
   const staticPaths = ["", "/about", "/memorials", "/missing", "/privacy", "/terms"];
 
