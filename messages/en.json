@@ -45,12 +45,12 @@
     "searchPlaceholder": "Search by name..."
   },
   "QuickUpload": {
-    "heading": "Information about a missing or deceased person.",
+    "heading": "Quick creation of a memorial page.",
     "uploadPhoto": "+ Upload photo",
-    "subtext": "Fill out the form for quick search or page creation",
+    "subtext": "Fill out the form to quickly create a page of remembrance",
     "fullNameLabel": "Full Name",
     "fullNamePlaceholder": "e.g. John Smith",
-    "dateLabel": "Date of last contact / date of death",
+    "dateLabel": "Date of death",
     "continue": "Continue"
   },
   "FeaturedMemorials": {

@@ -17,9 +17,33 @@ export async function createMissingPersonRecord(
     }
 
     const ageStr = formData.get("age");
-    const disappearanceDate = formData.get("disappearanceDate");
+    if (!ageStr || !String(ageStr).trim()) {
+      return { error: "Пожалуйста, укажите возраст." };
+    }
+    const age = parseInt(String(ageStr), 10);
+    if (isNaN(age) || age <= 0) {
+      return { error: "Пожалуйста, укажите корректный возраст." };
+    }
+
     const lastLocation = formData.get("lastLocation");
+    if (typeof lastLocation !== "string" || !lastLocation.trim()) {
+      return { error: "Пожалуйста, укажите последнее известное местонахождение." };
+    }
+
     const distinctiveFeatures = formData.get("distinctiveFeatures");
+    if (typeof distinctiveFeatures !== "string" || !distinctiveFeatures.trim()) {
+      return { error: "Пожалуйста, укажите отличительные черты." };
+    }
+
+    const disappearanceDate = formData.get("disappearanceDate");
+    if (!disappearanceDate || !String(disappearanceDate).trim()) {
+      return { error: "Пожалуйста, укажите дату исчезновения." };
+    }
+    const dateVal = new Date(String(disappearanceDate));
+    if (isNaN(dateVal.getTime())) {
+      return { error: "Пожалуйста, укажите корректную дату исчезновения." };
+    }
+
     const photo = formData.get("photo");
 
     const supabase = await createClient();
@@ -43,12 +67,6 @@ export async function createMissingPersonRecord(
         imageUrl = upRes.url;
       }
     }
-
-    const age = ageStr ? parseInt(String(ageStr), 10) : null;
-    const dateVal =
-      typeof disappearanceDate === "string" && disappearanceDate.trim()
-        ? new Date(disappearanceDate)
-        : null;
 
     await prisma.user.upsert({
       where: { id: user.id },
