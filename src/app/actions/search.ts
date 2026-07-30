@@ -31,29 +31,58 @@ export async function searchAll(query: string): Promise<SearchResult[]> {
   }
 
   const normalized = query.trim();
+  const words = normalized.split(/\s+/).filter(Boolean);
+
+  if (words.length === 0) {
+    return [];
+  }
+
+  // Construct search filters: every word must match at least one of the queried fields (AND of ORs)
+  const memorialWhere: any = {
+    status: "APPROVED",
+  };
+
+  const missingWhere: any = {
+    publishStatus: "APPROVED",
+  };
+
+  if (words.length === 1) {
+    const singleWord = words[0];
+    memorialWhere.OR = [
+      { firstName: { contains: singleWord, mode: "insensitive" } },
+      { lastName: { contains: singleWord, mode: "insensitive" } },
+      { biography: { contains: singleWord, mode: "insensitive" } },
+    ];
+    missingWhere.OR = [
+      { fullName: { contains: singleWord, mode: "insensitive" } },
+      { lastLocation: { contains: singleWord, mode: "insensitive" } },
+      { distinctiveFeatures: { contains: singleWord, mode: "insensitive" } },
+    ];
+  } else {
+    memorialWhere.AND = words.map((word) => ({
+      OR: [
+        { firstName: { contains: word, mode: "insensitive" } },
+        { lastName: { contains: word, mode: "insensitive" } },
+        { biography: { contains: word, mode: "insensitive" } },
+      ],
+    }));
+    missingWhere.AND = words.map((word) => ({
+      OR: [
+        { fullName: { contains: word, mode: "insensitive" } },
+        { lastLocation: { contains: word, mode: "insensitive" } },
+        { distinctiveFeatures: { contains: word, mode: "insensitive" } },
+      ],
+    }));
+  }
 
   try {
     const [memorials, missingPersons] = await Promise.all([
       prisma.memorial.findMany({
-        where: {
-          status: "APPROVED",
-          OR: [
-            { firstName: { contains: normalized, mode: "insensitive" } },
-            { lastName: { contains: normalized, mode: "insensitive" } },
-            { biography: { contains: normalized, mode: "insensitive" } },
-          ],
-        },
+        where: memorialWhere,
         orderBy: { createdAt: "desc" },
       }),
       prisma.missingPerson.findMany({
-        where: {
-          publishStatus: "APPROVED",
-          OR: [
-            { fullName: { contains: normalized, mode: "insensitive" } },
-            { lastLocation: { contains: normalized, mode: "insensitive" } },
-            { distinctiveFeatures: { contains: normalized, mode: "insensitive" } },
-          ],
-        },
+        where: missingWhere,
         orderBy: { createdAt: "desc" },
       }),
     ]);
