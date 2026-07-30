@@ -55,6 +55,8 @@ export function AdminView({
   const [subTab, setSubTab] = useState<"pending" | "live">("pending");
   const [isPending, startTransition] = useTransition();
   const [ticketReplies, setTicketReplies] = useState<Record<string, string>>({});
+  const [expandedMemorials, setExpandedMemorials] = useState<Record<string, boolean>>({});
+  const [expandedMissing, setExpandedMissing] = useState<Record<string, boolean>>({});
 
   const handleApproveMemorial = (id: string) => {
     startTransition(async () => {
@@ -313,9 +315,20 @@ export function AdminView({
                           </span>
                         </div>
                         {m.biography && (
-                          <p className="text-sm font-light text-ivory-200/70 line-clamp-3">
-                            {m.biography}
-                          </p>
+                          <div className="space-y-1">
+                            <p className={`text-sm font-light text-ivory-200/70 ${expandedMemorials[m.id] ? "" : "line-clamp-3"}`}>
+                              {m.biography}
+                            </p>
+                            {m.biography.length > 180 && (
+                              <button
+                                type="button"
+                                onClick={() => setExpandedMemorials((prev) => ({ ...prev, [m.id]: !prev[m.id] }))}
+                                className="text-xs font-medium text-gold-400 hover:text-gold-300 transition-colors"
+                              >
+                                {expandedMemorials[m.id] ? "Свернуть" : "Читать полностью"}
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
 
@@ -422,10 +435,21 @@ export function AdminView({
                           )}
                         </div>
                         {p.distinctiveFeatures && (
-                          <p className="text-sm font-light text-ivory-200/70 line-clamp-3">
-                            <span className="font-medium text-gold-400">Особые приметы:</span>{" "}
-                            {p.distinctiveFeatures}
-                          </p>
+                          <div className="space-y-1">
+                            <p className={`text-sm font-light text-ivory-200/70 ${expandedMissing[p.id] ? "" : "line-clamp-3"}`}>
+                              <span className="font-medium text-gold-400">Особые приметы:</span>{" "}
+                              {p.distinctiveFeatures}
+                            </p>
+                            {p.distinctiveFeatures.length > 180 && (
+                              <button
+                                type="button"
+                                onClick={() => setExpandedMissing((prev) => ({ ...prev, [p.id]: !prev[p.id] }))}
+                                className="text-xs font-medium text-gold-400 hover:text-gold-300 transition-colors"
+                              >
+                                {expandedMissing[p.id] ? "Свернуть" : "Читать полностью"}
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
 

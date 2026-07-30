@@ -109,7 +109,8 @@ export function MissingCard({
           ease: [0.22, 1, 0.36, 1],
         }}
         whileHover={{ y: -4 }}
-        className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-shadow duration-500 hover:border-white/15 hover:shadow-[0_16px_48px_-12px_rgba(148,163,184,0.18)]"
+        onClick={() => setIsModalOpen(true)}
+        className="group flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-shadow duration-500 hover:border-white/15 hover:shadow-[0_16px_48px_-12px_rgba(148,163,184,0.18)] cursor-pointer"
       >
         <div className="relative h-72 overflow-hidden bg-black/40">
           {photoUrl ? (
@@ -211,11 +212,11 @@ export function MissingCard({
               initial={{ opacity: 0, scale: 0.95, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 16 }}
-              className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/15 bg-charcoal-900 p-6 shadow-2xl sm:p-8"
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/15 bg-charcoal-900 p-6 shadow-2xl sm:p-8 custom-scrollbar"
             >
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <h3 className="text-lg font-medium text-ivory-50">
-                  Сообщить информацию о {fullName}
+                <h3 className="text-xl font-medium text-ivory-50">
+                  Анкета поиска: {fullName}
                 </h3>
                 <button
                   onClick={() => setIsModalOpen(false)}
@@ -225,71 +226,121 @@ export function MissingCard({
                 </button>
               </div>
 
-              <form onSubmit={handleReportSubmit} className="space-y-4 pt-6">
-                <div>
-                  <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                    Ваше имя (необязательно)
-                  </label>
-                  <input
-                    type="text"
-                    value={reporterName}
-                    onChange={(e) => setReporterName(e.target.value)}
-                    placeholder="Например, Александр"
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
-                  />
+              {/* Profile Details Section */}
+              <div className="mt-6 flex flex-col sm:flex-row gap-6 pb-6 border-b border-white/10">
+                {photoUrl && (
+                  <div className="relative h-48 w-full sm:w-48 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+                    <Image
+                      src={photoUrl}
+                      alt={fullName}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex-1 space-y-3">
+                  <h4 className="text-2xl font-light text-ivory-100">{fullName}</h4>
+                  <div className="grid grid-cols-1 gap-2 text-sm font-light text-ivory-200/60">
+                    {age ? (
+                      <p>
+                        <span className="font-medium text-gold-400">Возраст:</span> {age} {t("years")}
+                      </p>
+                    ) : null}
+                    {lastLocation ? (
+                      <p>
+                        <span className="font-medium text-gold-400">Последнее местонахождение:</span> {lastLocation}
+                      </p>
+                    ) : null}
+                    {formattedDate ? (
+                      <p>
+                        <span className="font-medium text-gold-400">Дата исчезновения:</span> {formattedDate}
+                      </p>
+                    ) : null}
+                  </div>
+                  {distinctiveFeatures && (
+                    <div className="pt-2">
+                      <h5 className="text-xs font-semibold uppercase tracking-wider text-ivory-200/50 mb-1">
+                        Особые приметы и описание
+                      </h5>
+                      <p className="text-sm font-light leading-relaxed text-ivory-100/80 bg-white/5 p-4 rounded-xl border border-white/5 whitespace-pre-wrap">
+                        {distinctiveFeatures}
+                      </p>
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                    Ваш Телефон или Email *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
-                    placeholder="Номер телефона или email@example.com"
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
-                  />
-                </div>
+              {/* Sighting Report Form */}
+              <div className="pt-6">
+                <h4 className="text-lg font-light text-ivory-50 mb-4">
+                  Сообщить информацию о человеке
+                </h4>
+                <form onSubmit={handleReportSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
+                      Ваше имя (необязательно)
+                    </label>
+                    <input
+                      type="text"
+                      value={reporterName}
+                      onChange={(e) => setReporterName(e.target.value)}
+                      placeholder="Например, Александр"
+                      className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                    Сообщение / Подробности *
-                  </label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Опишите, где и когда видели человека, или любую полезную информацию..."
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none resize-none"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
+                      Ваш Телефон или Email *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      placeholder="Номер телефона или email@example.com"
+                      className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
+                    />
+                  </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Отмена
-                  </Button>
-                  <Button type="submit" disabled={isPending} className="gap-2">
-                    {isPending ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Отправка...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4" />
-                        <span>Отправить автору</span>
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </form>
+                  <div>
+                    <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
+                      Сообщение / Подробности *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Опишите, где и когда видели человека, или любую полезную информацию..."
+                      className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      Отмена
+                    </Button>
+                    <Button type="submit" disabled={isPending} className="gap-2">
+                      {isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Отправка...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          <span>Отправить автору</span>
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </motion.div>
           </div>
         )}
