@@ -12,6 +12,7 @@ import { uploadMemorialImage, createMemorialRecord } from "@/app/actions/memoria
 import { createClient } from "@/utils/supabase/client";
 import { cn } from "@/lib/utils";
 import imageCompression from "browser-image-compression";
+import { DatePicker } from "@/components/ui/date-picker";
 
 const inputClassName =
   "w-full rounded-2xl border border-white/10 bg-black/20 px-5 py-3.5 text-sm text-ivory-100 placeholder:text-ivory-200/35 backdrop-blur-md transition-all duration-300 hover:border-white/15 hover:bg-black/30 focus:border-gold-500/50 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-gold-500/20 disabled:opacity-50";
@@ -302,26 +303,24 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
           <label htmlFor="birthDate" className="block text-sm font-light text-ivory-200/70">
             {t("birthDate")}
           </label>
-          <input
+          <DatePicker
             id="birthDate"
-            type="date"
+            name="birthDate"
             disabled={isPending}
             value={formData.birthDate}
-            onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-            className={inputClassName}
+            onChange={(val) => setFormData({ ...formData, birthDate: val })}
           />
         </div>
         <div className="space-y-2">
           <label htmlFor="deathDate" className="block text-sm font-light text-ivory-200/70">
             {t("passingDate")}
           </label>
-          <input
+          <DatePicker
             id="deathDate"
-            type="date"
+            name="deathDate"
             disabled={isPending}
             value={formData.deathDate}
-            onChange={(e) => setFormData({ ...formData, deathDate: e.target.value })}
-            className={inputClassName}
+            onChange={(val) => setFormData({ ...formData, deathDate: val })}
           />
         </div>
       </div>
