@@ -42,27 +42,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error generating sitemap for memorials:", error);
   }
 
-  // Dynamic Missing Persons URLs (only approved ones)
-  let dynamicMissingUrls: MetadataRoute.Sitemap = [];
-  try {
-    const missingPersons = await prisma.missingPerson.findMany({
-      where: { publishStatus: "APPROVED" },
-      select: { id: true, updatedAt: true },
-    });
-
-    for (const person of missingPersons) {
-      for (const locale of locales) {
-        dynamicMissingUrls.push({
-          url: `${baseUrl}/${locale}/missing/${person.id}`,
-          lastModified: person.updatedAt,
-          changeFrequency: "weekly",
-          priority: 0.6,
-        });
-      }
-    }
-  } catch (error) {
-    console.error("Error generating sitemap for missing persons:", error);
-  }
-
-  return [...staticUrls, ...dynamicMemorialUrls, ...dynamicMissingUrls];
+  return [...staticUrls, ...dynamicMemorialUrls];
 }
