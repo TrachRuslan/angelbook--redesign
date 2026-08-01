@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CandleButton } from "@/components/ui/candle-button";
 import { QrPrintButton } from "@/components/ui/qr-print-button";
 import { PrintPdfButton } from "@/components/ui/print-pdf-button";
+import { MemorialThemeWrapper } from "@/components/ui/memorial-theme-wrapper";
 import { cn } from "@/lib/utils";
 
 interface MemorialPageProps {
@@ -103,31 +104,14 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.angelbook.org";
   const shareUrl = `${baseUrl}/${locale}/memorials/${memorial.id}`;
   const shareText = `${memorial.firstName} ${memorial.lastName} — Книга памяти`;
-
   const theme = memorial.theme || "CLASSIC";
-  const bgClasses =
-    theme === "STARRY" ? "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950 via-slate-950 to-charcoal-950" :
-    theme === "FOREST" ? "bg-gradient-to-br from-emerald-950/60 via-zinc-950 to-charcoal-950" :
-    theme === "MARBLE" ? "bg-gradient-to-br from-stone-900 via-stone-950 to-charcoal-950" :
-    "bg-charcoal-950";
 
   return (
     <>
-      <main className={cn("relative min-h-screen pb-24 pt-32 overflow-hidden transition-all duration-700", bgClasses)}>
-        {theme === "STARRY" && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 bg-[radial-gradient(1.5px_1.5px_at_20px_30px,#fff_100%,transparent_0),radial-gradient(1px_1px_at_60px_10px,#fff_100%,transparent_0),radial-gradient(2px_2px_at_120px_80px,#fff_80%,transparent_0),radial-gradient(1.5px_1.5px_at_220px_110px,#fff_90%,transparent_0)] bg-[size:250px_250px] opacity-20" />
-        )}
-        {theme === "FOREST" && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 bg-[radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.06),transparent_50%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.03),transparent_50%)]" />
-        )}
-        {theme === "MARBLE" && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-[0.02] bg-[linear-gradient(45deg,#d4af37_25%,transparent_25%),linear-gradient(-45deg,#d4af37_25%,transparent_25%)] bg-[size:120px_120px]" />
-        )}
-
-        <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2">
-          {/* Image Section */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-gold-500/15 bg-charcoal-900 shadow-2xl">
+      <MemorialThemeWrapper
+        theme={theme}
+        photoNode={
+          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-gold-500/15 bg-charcoal-900 shadow-2xl transition-all duration-500">
             {memorial.imageUrl ? (
               <Image
                 src={memorial.imageUrl}
@@ -144,9 +128,9 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/60 via-transparent to-transparent" />
           </div>
-
-          {/* Info Section */}
-          <div className="flex flex-col justify-center space-y-8">
+        }
+        infoNode={
+          <>
             <div className="space-y-4">
               <h1 className="text-4xl font-light tracking-tight text-ivory-50 sm:text-5xl lg:text-6xl">
                 {memorial.firstName} {memorial.lastName}
@@ -221,10 +205,9 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
                 </section>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-      </main>
+          </>
+        }
+      />
 
       {/* Hidden PDF/Print Layout */}
       <div className="hidden print-layout text-stone-900 bg-white p-12 min-h-screen flex flex-col justify-between" style={{ display: "none" }}>

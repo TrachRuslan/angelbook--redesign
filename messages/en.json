@@ -94,7 +94,22 @@
       "lightCandle": "Light a candle",
       "biography": "Biography",
       "epitaph": "Epitaph",
-      "printPdf": "Book of Memory (PDF)"
+      "printPdf": "Book of Memory (PDF)",
+      "listenStory": "Listen to Story",
+      "stopListening": "Stop Audio",
+      "orderTag": "Order AngelTag",
+      "tagTitle": "Order AngelTag Plate",
+      "tagSubtitle": "Create a beautiful physical QR-code plate for the gravestone",
+      "materialLabel": "Plate Material",
+      "materialGold": "Golden Brass (Matte)",
+      "materialSilver": "Silver Aluminum (Brushed)",
+      "addressLabel": "Shipping Address",
+      "addressPlaceholder": "City, ZIP code, shipping details, recipient, phone",
+      "orderBtn": "Submit Order",
+      "orderSuccess": "AngelTag order submitted successfully! The administrator will contact you shortly.",
+      "orderError": "Please provide your shipping address.",
+      "close": "Close",
+      "ttsPlaying": "Reading..."
     }
   },
   "CreateMemorial": {
@@ -131,19 +146,72 @@
       "marble": "Premium Marble"
     }
   },
+  "CreatePage": {
+    "selectTypeTitle": "Select Page Type",
+    "selectTypeSubtitle": "Choose the goal of creating a new page on AngelBook",
+    "createMemorialTitle": "Create Memorial",
+    "createMemorialDesc": "Preserve life stories, photos, and bright memories of a deceased loved one.",
+    "reportMissingTitle": "Report Missing Person",
+    "reportMissingDesc": "Publish a search announcement with age, location, and details to speed up their search.",
+    "back": "Back"
+  },
   "Cabinet": {
     "title": "My Cabinet",
     "subtitle": "Manage your created memorials and personal account",
+    "greeting": "Hello, {name}!",
+    "addMemorial": "Memorial",
+    "addMissing": "Missing Notice",
     "nav": {
       "memorials": "My Memorials",
-      "create": "Create Memorial",
-      "settings": "Account Settings"
+      "missing": "Missing Persons",
+      "reports": "Witness Messages",
+      "support": "Support Service",
+      "settings": "Profile & Settings",
+      "create": "Create Memorial"
     },
     "stats": {
-      "totalMemorials": "Total Memorials",
-      "totalCandles": "Candles Lit",
+      "totalMemorials": "Memorials",
+      "missingPersons": "Missing Notices",
+      "witnessReports": "Witness Messages",
+      "totalCandles": "Lit Candles",
       "accountStatus": "Account Status",
       "active": "Active"
+    },
+    "sections": {
+      "myMemorials": "My Memorials ({count})",
+      "myMissing": "My Missing Notices ({count})",
+      "witnessReports": "Witness Messages ({count})",
+      "supportTickets": "Support Requests ({count})",
+      "profileSettings": "Profile & Settings"
+    },
+    "items": {
+      "candles": "candles",
+      "open": "Open",
+      "edit": "Edit",
+      "delete": "Delete",
+      "searching": "Searching",
+      "found": "Found",
+      "noLocation": "Location not specified",
+      "markFound": "Mark 'Found'",
+      "returnSearching": "Set 'Searching'",
+      "reports": "Messages ({count})",
+      "emptyMemorials": "You have not created any memorials yet.",
+      "emptyMissing": "You have not posted any missing person notices yet.",
+      "emptyReports": "You have no witness messages received yet.",
+      "anonymous": "Anonymous",
+      "byNotice": "Notice",
+      "contacts": "Contacts",
+      "emailAccount": "Email (account)",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "saving": "Saving...",
+      "saveProfile": "Save Profile",
+      "questionFrom": "Question from",
+      "answered": "Answered",
+      "inProgress": "In Progress",
+      "supportResponse": "Response from Support:"
     },
     "table": {
       "name": "Name",
@@ -161,6 +229,14 @@
       "confirm": "Yes, Delete",
       "cancel": "Cancel"
     },
+    "deleteMissingModal": {
+      "title": "Delete Missing Person Announcement?",
+      "description": "Are you sure you want to delete the record for {name}?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "supportPending": "A support specialist will answer your question shortly...",
+    "emptySupport": "You have no support requests yet. You can write to us by clicking the headphones icon in the bottom right corner.",
     "empty": {
       "title": "No memorials created yet",
       "description": "Create your first memorial page to honor the memory of a loved one.",
@@ -295,15 +371,43 @@
     "p4": "The administration reserves the right to moderate all publications before their final display on the site, as well as temporarily block or permanently delete any content that violates the rules of the platform or applicable law."
   },
   "Support": {
-    "title": "Technical Support",
-    "subtitle": "Contact us for any questions",
-    "authRequired": "To submit a support request, you must log in first.",
-    "login": "Log in to account",
-    "messageLabel": "Your question or message *",
-    "messagePlaceholder": "Describe your issue or ask a question...",
-    "submit": "Send message",
-    "enterMessage": "Please enter a message.",
-    "success": "Message sent to technical support. The response will arrive in your cabinet."
+    "button": "Support",
+    "modalTitle": "Support Service",
+    "modalSubtitle": "Ask a question or report an issue",
+    "messageLabel": "Your message",
+    "messagePlaceholder": "Describe your question or issue in free form...",
+    "submitting": "Sending...",
+    "submit": "Submit request",
+    "success": "Your request has been sent! An administrator will respond to you shortly.",
+    "error": "Please enter a message text."
+  },
+  "Admin": {
+    "accessRestricted": "Access Restricted",
+    "accessRestrictedDesc": "This section is accessible to system administrators only.",
+    "title": "Moderation Panel",
+    "subtitle": "Approve, reject, and manage all records",
+    "tabs": {
+      "memorials": "Memorials ({count})",
+      "missing": "Missing Notices ({count})",
+      "support": "Support Tickets ({count})"
+    },
+    "subtabs": {
+      "pending": "Pending Moderation ({count})",
+      "approved": "Approved / Completed ({count})"
+    },
+    "actions": {
+      "approve": "Approve",
+      "rejectDelete": "Reject & Delete",
+      "returnModeration": "Return to Moderation",
+      "delete": "Delete",
+      "reply": "Reply"
+    },
+    "items": {
+      "age": "Age: {age} years",
+      "lastLocation": "Last location: {location}",
+      "distinctiveFeatures": "Distinctive features:",
+      "yourAnswer": "Your answer:"
+    }
   },
   "QR": {
     "buttonLabel": "QR Code",

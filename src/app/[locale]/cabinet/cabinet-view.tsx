@@ -156,7 +156,7 @@ export function CabinetView({
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-light text-ivory-50 sm:text-4xl">
-              {user.firstName ? `Привет, ${user.firstName}!` : t("title")}
+              {user.firstName ? t("greeting", { name: user.firstName }) : t("title")}
             </h1>
             <p className="mt-1 text-sm font-light text-ivory-200/50">
               {user.email}
@@ -164,15 +164,15 @@ export function CabinetView({
           </div>
           <div className="flex items-center gap-3">
             <Link href="/create">
-              <Button className="gap-2 bg-gold-500 hover:bg-gold-400 text-charcoal-950 font-medium">
+              <Button className="gap-2 bg-gold-500 hover:bg-gold-400 text-charcoal-950 font-medium cursor-pointer">
                 <Plus className="h-4 w-4" />
-                <span>Мемориал</span>
+                <span>{t("addMemorial")}</span>
               </Button>
             </Link>
             <Link href="/missing/create">
-              <Button variant="outline" className="gap-2 border-gold-500/30 text-gold-400">
+              <Button variant="outline" className="gap-2 border-gold-500/30 text-gold-400 cursor-pointer">
                 <Plus className="h-4 w-4" />
-                <span>О пропаже</span>
+                <span>{t("addMissing")}</span>
               </Button>
             </Link>
           </div>
@@ -183,7 +183,7 @@ export function CabinetView({
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <span className="text-xs font-light tracking-wide text-ivory-200/50 uppercase">
-                Мемориалы
+                {t("stats.totalMemorials")}
               </span>
               <HeartHandshake className="h-5 w-5 text-gold-400" />
             </div>
@@ -193,7 +193,7 @@ export function CabinetView({
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <span className="text-xs font-light tracking-wide text-ivory-200/50 uppercase">
-                Относительно пропавших
+                {t("stats.missingPersons")}
               </span>
               <Search className="h-5 w-5 text-sky-400" />
             </div>
@@ -203,7 +203,7 @@ export function CabinetView({
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <span className="text-xs font-light tracking-wide text-ivory-200/50 uppercase">
-                Сообщения от очевидцев
+                {t("stats.witnessReports")}
               </span>
               <MessageSquare className="h-5 w-5 text-emerald-400" />
             </div>
@@ -229,33 +229,33 @@ export function CabinetView({
               <button
                 onClick={() => setActiveTab("memorials")}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all",
+                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all cursor-pointer",
                   activeTab === "memorials"
                     ? "bg-gold-500/15 text-gold-300 border border-gold-500/30"
                     : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
                 )}
               >
                 <LayoutDashboard className="h-4 w-4" />
-                <span>Мои мемориалы</span>
+                <span>{t("nav.memorials")}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab("missing")}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all",
+                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all cursor-pointer",
                   activeTab === "missing"
                     ? "bg-sky-500/15 text-sky-300 border border-sky-500/30"
                     : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
                 )}
               >
                 <Search className="h-4 w-4" />
-                <span>Объявления о пропавших</span>
+                <span>{t("nav.missing")}</span>
               </button>
 
               <button
                 onClick={() => setActiveTab("reports")}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-light transition-all",
+                  "flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-light transition-all cursor-pointer",
                   activeTab === "reports"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                     : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
@@ -263,7 +263,7 @@ export function CabinetView({
               >
                 <div className="flex items-center gap-3">
                   <MessageSquare className="h-4 w-4" />
-                  <span>Сообщения</span>
+                  <span>{t("nav.reports")}</span>
                 </div>
                 {allReports.length > 0 && (
                   <span className="rounded-full bg-emerald-500/30 px-2 py-0.5 text-xs text-emerald-300">
@@ -275,7 +275,7 @@ export function CabinetView({
               <button
                 onClick={() => setActiveTab("support")}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-light transition-all",
+                  "flex w-full items-center justify-between rounded-2xl px-4 py-3.5 text-sm font-light transition-all cursor-pointer",
                   activeTab === "support"
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                     : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
@@ -283,7 +283,7 @@ export function CabinetView({
               >
                 <div className="flex items-center gap-3">
                   <HeartHandshake className="h-4 w-4" />
-                  <span>Служба поддержки</span>
+                  <span>{t("nav.support")}</span>
                 </div>
                 {supportTickets.length > 0 && (
                   <span className="rounded-full bg-sky-500/30 px-2 py-0.5 text-xs text-sky-300">
@@ -295,14 +295,14 @@ export function CabinetView({
               <button
                 onClick={() => setActiveTab("settings")}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all",
+                  "flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-light transition-all cursor-pointer",
                   activeTab === "settings"
                     ? "bg-gold-500/15 text-gold-300 border border-gold-500/30"
                     : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
                 )}
               >
                 <Settings className="h-4 w-4" />
-                <span>Профиль и настройки</span>
+                <span>{t("nav.settings")}</span>
               </button>
             </div>
           </div>
@@ -312,7 +312,7 @@ export function CabinetView({
             {activeTab === "memorials" && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
                 <h2 className="mb-6 text-xl font-light text-ivory-50">
-                  Мои мемориалы ({memorials.length})
+                  {t("sections.myMemorials", { count: memorials.length })}
                 </h2>
 
                 {memorials.length > 0 ? (
@@ -350,16 +350,16 @@ export function CabinetView({
                                 {m.firstName} {m.lastName}
                               </h3>
                               <p className="text-xs font-light text-ivory-200/50">
-                                {dates} • {m.candleCount || 0} свечей
+                                {dates} • {m.candleCount || 0} {t("items.candles")}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
                             <Link href={`/memorials/${m.id}`}>
-                              <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-ivory-200/60 hover:text-ivory-100">
+                              <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-ivory-200/60 hover:text-ivory-100 cursor-pointer">
                                 <ExternalLink className="h-3.5 w-3.5" />
-                                <span>Открыть</span>
+                                <span>{t("items.open")}</span>
                               </Button>
                             </Link>
 
@@ -367,17 +367,17 @@ export function CabinetView({
                               variant="ghost"
                               size="sm"
                               onClick={() => setEditingMemorial(m)}
-                              className="gap-1.5 text-xs text-gold-400 hover:text-gold-300"
+                              className="gap-1.5 text-xs text-gold-400 hover:text-gold-300 cursor-pointer"
                             >
                               <Edit className="h-3.5 w-3.5" />
-                              <span>Редактировать</span>
+                              <span>{t("items.edit")}</span>
                             </Button>
 
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => setDeletingMemorial(m)}
-                              className="gap-1.5 text-xs text-red-400 hover:text-red-300"
+                              className="gap-1.5 text-xs text-red-400 hover:text-red-300 cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -388,7 +388,7 @@ export function CabinetView({
                   </div>
                 ) : (
                   <div className="py-12 text-center text-sm font-light text-ivory-200/40">
-                    У вас пока нет созданных мемориалов.
+                    {t("items.emptyMemorials")}
                   </div>
                 )}
               </div>
@@ -397,7 +397,7 @@ export function CabinetView({
             {activeTab === "missing" && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
                 <h2 className="mb-6 text-xl font-light text-ivory-50">
-                  Мои объявления о пропавших ({missingPersons.length})
+                  {t("sections.myMissing", { count: missingPersons.length })}
                 </h2>
 
                 {missingPersons.length > 0 ? (
@@ -437,11 +437,11 @@ export function CabinetView({
                                       : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
                                   )}
                                 >
-                                  {p.status === "SEARCHING" ? "В поиске" : "Найден"}
+                                  {p.status === "SEARCHING" ? t("items.searching") : t("items.found")}
                                 </span>
                               </div>
                               <p className="text-xs font-light text-ivory-200/50 mt-1">
-                                {p.lastLocation || "Место не указано"}
+                                {p.lastLocation || t("items.noLocation")}
                               </p>
                             </div>
                           </div>
@@ -453,7 +453,7 @@ export function CabinetView({
                               disabled={isPending}
                               onClick={() => handleToggleStatus(p.id, p.status)}
                               className={cn(
-                                "gap-1.5 text-xs border-white/10",
+                                "gap-1.5 text-xs border-white/10 cursor-pointer",
                                 p.status === "SEARCHING"
                                   ? "text-emerald-400 hover:bg-emerald-500/10"
                                   : "text-red-400 hover:bg-red-500/10"
@@ -462,8 +462,8 @@ export function CabinetView({
                               <CheckCircle className="h-3.5 w-3.5" />
                               <span>
                                 {p.status === "SEARCHING"
-                                  ? "Отметить 'Найден'"
-                                  : "Вернуть 'В поиске'"}
+                                  ? t("items.markFound")
+                                  : t("items.returnSearching")}
                               </span>
                             </Button>
 
@@ -472,10 +472,10 @@ export function CabinetView({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setSelectedReportsPerson(p)}
-                                className="gap-1.5 text-xs border-sky-500/30 text-sky-300 bg-sky-500/10 hover:bg-sky-500/20"
+                                className="gap-1.5 text-xs border-sky-500/30 text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 cursor-pointer"
                               >
                                 <MessageSquare className="h-3.5 w-3.5" />
-                                <span>Сообщения ({p.reports.length})</span>
+                                <span>{t("items.reports", { count: p.reports.length })}</span>
                               </Button>
                             )}
 
@@ -483,7 +483,7 @@ export function CabinetView({
                               variant="ghost"
                               size="sm"
                               onClick={() => setDeletingMissing(p)}
-                              className="gap-1.5 text-xs text-red-400 hover:text-red-300"
+                              className="gap-1.5 text-xs text-red-400 hover:text-red-300 cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -494,7 +494,7 @@ export function CabinetView({
                   </div>
                 ) : (
                   <div className="py-12 text-center text-sm font-light text-ivory-200/40">
-                    Вы пока не подавали объявлений о пропавших людях.
+                    {t("items.emptyMissing")}
                   </div>
                 )}
               </div>
@@ -503,7 +503,7 @@ export function CabinetView({
             {activeTab === "reports" && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
                 <h2 className="mb-6 text-xl font-light text-ivory-50">
-                  Сообщения от очевидцев ({allReports.length})
+                  {t("sections.witnessReports", { count: allReports.length })}
                 </h2>
 
                 {allReports.length > 0 ? (
@@ -516,21 +516,21 @@ export function CabinetView({
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
                           <div>
                             <span className="text-xs text-emerald-400 font-medium">
-                              По объявлению: {report.personName}
+                              {t("items.byNotice")}: {report.personName}
                             </span>
                             <h4 className="text-sm font-medium text-ivory-100">
-                              От: {report.reporterName || "Аноним"}
+                              {t("items.questionFrom")}: {report.reporterName || t("items.anonymous")}
                             </h4>
                           </div>
                           <span className="text-xs text-ivory-200/40 font-mono">
                             {new Date(report.createdAt).toLocaleString(
-                              locale === "ru" ? "ru-RU" : "en-US"
+                              locale === "ru" ? "ru-RU" : locale === "uk" ? "uk-UA" : "en-US"
                             )}
                           </span>
                         </div>
 
                         <div className="text-xs font-mono text-sky-300">
-                          Контакты: {report.contactInfo}
+                          {t("items.contacts")}: {report.contactInfo}
                         </div>
 
                         <p className="text-sm font-light text-ivory-100/90 whitespace-pre-wrap pt-2">
@@ -541,7 +541,7 @@ export function CabinetView({
                   </div>
                 ) : (
                   <div className="py-12 text-center text-sm font-light text-ivory-200/40">
-                    У вас пока нет полученных сообщений от очевидцев.
+                    {t("items.emptyReports")}
                   </div>
                 )}
               </div>
@@ -550,13 +550,13 @@ export function CabinetView({
             {activeTab === "settings" && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
                 <h2 className="mb-6 text-xl font-light text-ivory-50">
-                  Профиль и настройки
+                  {t("sections.profileSettings")}
                 </h2>
 
                 <form onSubmit={handleProfileSubmit} className="space-y-5 max-w-md">
                   <div>
                     <label className="block text-xs font-light text-ivory-200/60 uppercase mb-2">
-                      Email (аккаунт)
+                      {t("items.emailAccount")}
                     </label>
                     <input
                       type="text"
@@ -568,40 +568,40 @@ export function CabinetView({
 
                   <div>
                     <label className="block text-xs font-light text-ivory-200/60 uppercase mb-2">
-                      Имя
+                      {t("items.firstName")}
                     </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="Введите ваше имя"
+                      placeholder={t("items.firstNamePlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-light text-ivory-200/60 uppercase mb-2">
-                      Фамилия
+                      {t("items.lastName")}
                     </label>
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Введите вашу фамилию"
+                      placeholder={t("items.lastNamePlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
                     />
                   </div>
 
-                  <Button type="submit" disabled={isPending} className="gap-2">
+                  <Button type="submit" disabled={isPending} className="gap-2 cursor-pointer">
                     {isPending ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Сохранение...</span>
+                        <span>{t("items.saving")}</span>
                       </>
                     ) : (
                       <>
                         <Save className="h-4 w-4" />
-                        <span>Сохранить профиль</span>
+                        <span>{t("items.saveProfile")}</span>
                       </>
                     )}
                   </Button>
@@ -612,7 +612,7 @@ export function CabinetView({
             {activeTab === "support" && (
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
                 <h2 className="mb-6 text-xl font-light text-ivory-50">
-                  Мои обращения в техподдержку ({supportTickets.length})
+                  {t("sections.supportTickets", { count: supportTickets.length })}
                 </h2>
 
                 {supportTickets.length > 0 ? (
@@ -623,14 +623,14 @@ export function CabinetView({
                         className="rounded-2xl border border-white/5 bg-black/35 p-5 space-y-4"
                       >
                         <div className="flex justify-between items-center text-xs font-light text-ivory-200/40">
-                          <span>Вопрос от {new Date(ticket.createdAt).toLocaleString()}</span>
+                          <span>{t("items.questionFrom")} {new Date(ticket.createdAt).toLocaleString()}</span>
                           <span className={cn(
                             "rounded-full px-2.5 py-0.5 text-[10px] font-medium tracking-wider uppercase",
                             ticket.adminResponse
                               ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                               : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                           )}>
-                            {ticket.adminResponse ? "Отвечен" : "В обработке"}
+                            {ticket.adminResponse ? t("items.answered") : t("items.inProgress")}
                           </span>
                         </div>
 
@@ -642,7 +642,7 @@ export function CabinetView({
                           <div className="border-t border-white/5 pt-4">
                             <div className="text-xs font-medium text-sky-400 mb-1 flex items-center gap-1.5">
                               <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-pulse" />
-                              Ответ от техподдержки:
+                              {t("items.supportResponse")}
                             </div>
                             <p className="text-sm font-light text-sky-200/90 bg-sky-500/5 p-4 rounded-xl leading-relaxed border border-sky-500/10">
                               {ticket.adminResponse}
@@ -650,7 +650,7 @@ export function CabinetView({
                           </div>
                         ) : (
                           <div className="text-xs font-light text-ivory-200/40 italic">
-                            Специалист техподдержки скоро ответит на ваш вопрос...
+                            {t("supportPending")}
                           </div>
                         )}
                       </div>
@@ -658,7 +658,7 @@ export function CabinetView({
                   </div>
                 ) : (
                   <div className="py-12 text-center text-sm font-light text-ivory-200/40">
-                    У вас пока нет обращений в техподдержку. Вы можете написать нам, нажав на иконку наушников в правом нижнем углу сайта.
+                    {t("emptySupport")}
                   </div>
                 )}
               </div>
@@ -706,15 +706,15 @@ export function CabinetView({
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div>
                   <h3 className="text-lg font-medium text-ivory-50">
-                    Сообщения от очевидцев ({selectedReportsPerson.reports.length})
+                    {t("sections.witnessReports", { count: selectedReportsPerson.reports.length })}
                   </h3>
                   <p className="text-xs text-sky-400 mt-0.5">
-                    По объявлению: {selectedReportsPerson.fullName}
+                    {t("items.byNotice")}: {selectedReportsPerson.fullName}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedReportsPerson(null)}
-                  className="rounded-full p-1.5 text-ivory-200/50 hover:bg-white/10 hover:text-ivory-100"
+                  className="rounded-full p-1.5 text-ivory-200/50 hover:bg-white/10 hover:text-ivory-100 cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -728,17 +728,17 @@ export function CabinetView({
                   >
                     <div className="flex items-center justify-between text-xs text-ivory-200/50">
                       <span className="font-medium text-gold-400">
-                        {report.reporterName || "Аноним"}
+                        {report.reporterName || t("items.anonymous")}
                       </span>
                       <span>
                         {new Date(report.createdAt).toLocaleString(
-                          locale === "ru" ? "ru-RU" : "en-US"
+                          locale === "ru" ? "ru-RU" : locale === "uk" ? "uk-UA" : "en-US"
                         )}
                       </span>
                     </div>
 
                     <div className="text-xs text-sky-300 font-mono">
-                      Контакты: {report.contactInfo}
+                      {t("items.contacts")}: {report.contactInfo}
                     </div>
 
                     <p className="text-sm font-light text-ivory-100 whitespace-pre-wrap pt-1">
@@ -772,6 +772,7 @@ export function CabinetView({
                 <Button
                   variant="outline"
                   onClick={() => setDeletingMemorial(null)}
+                  className="cursor-pointer"
                 >
                   {t("deleteModal.cancel")}
                 </Button>
@@ -779,6 +780,7 @@ export function CabinetView({
                   variant="destructive"
                   disabled={isPending}
                   onClick={handleDeleteMemorial}
+                  className="cursor-pointer"
                 >
                   {isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -803,27 +805,29 @@ export function CabinetView({
             <div className="relative w-full max-w-md rounded-3xl border border-red-500/20 bg-charcoal-900 p-6 text-center shadow-2xl sm:p-8">
               <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-red-500" />
               <h3 className="text-xl font-medium text-ivory-50">
-                Удалить объявление о пропаже?
+                {t("deleteMissingModal.title")}
               </h3>
               <p className="mt-2 text-sm font-light text-ivory-200/60">
-                Вы действительно хотите удалить запись про {deletingMissing.fullName}?
+                {t("deleteMissingModal.description", { name: deletingMissing.fullName })}
               </p>
               <div className="mt-6 flex justify-center gap-3">
                 <Button
                   variant="outline"
                   onClick={() => setDeletingMissing(null)}
+                  className="cursor-pointer"
                 >
-                  Отмена
+                  {t("deleteMissingModal.cancel")}
                 </Button>
                 <Button
                   variant="destructive"
                   disabled={isPending}
                   onClick={handleDeleteMissing}
+                  className="cursor-pointer"
                 >
                   {isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <span>Удалить</span>
+                    <span>{t("deleteMissingModal.confirm")}</span>
                   )}
                 </Button>
               </div>

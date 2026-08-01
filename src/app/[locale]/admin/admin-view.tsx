@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import {
   approveMemorial,
   rejectMemorial,
@@ -32,12 +33,12 @@ import { respondToSupportTicket } from "@/app/actions/support";
 interface AdminViewProps {
   isAdmin: boolean;
   userId: string;
-  pendingMemorials: any[];
-  approvedMemorials: any[];
-  pendingMissing: any[];
-  approvedMissing: any[];
-  pendingTickets: any[];
-  repliedTickets: any[];
+  pendingMemorials?: any[];
+  approvedMemorials?: any[];
+  pendingMissing?: any[];
+  approvedMissing?: any[];
+  pendingTickets?: any[];
+  repliedTickets?: any[];
 }
 
 export function AdminView({
@@ -51,6 +52,7 @@ export function AdminView({
   repliedTickets = [],
 }: AdminViewProps) {
   const router = useRouter();
+  const tAdmin = useTranslations("Admin");
   const [activeTab, setActiveTab] = useState<"memorials" | "missing" | "support">("memorials");
   const [subTab, setSubTab] = useState<"pending" | "live">("pending");
   const [isPending, startTransition] = useTransition();
@@ -154,9 +156,9 @@ export function AdminView({
       <main className="min-h-screen bg-charcoal-950 flex flex-col items-center justify-center px-4 py-24 text-center">
         <div className="max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-2xl">
           <ShieldAlert className="mx-auto h-16 w-16 text-gold-400 mb-6" />
-          <h1 className="text-2xl font-light text-ivory-50 mb-3">Доступ ограничен</h1>
+          <h1 className="text-2xl font-light text-ivory-50 mb-3">{tAdmin("accessRestricted")}</h1>
           <p className="text-sm font-light text-ivory-200/50">
-            Данный раздел доступен только администраторам системы.
+            {tAdmin("accessRestrictedDesc")}
           </p>
         </div>
       </main>
@@ -172,9 +174,9 @@ export function AdminView({
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-light text-ivory-50 sm:text-4xl">Панель модерации</h1>
+          <h1 className="text-3xl font-light text-ivory-50 sm:text-4xl">{tAdmin("title")}</h1>
           <p className="mt-1 text-sm font-light text-ivory-200/50">
-            Одобрение, отклонение и управление всеми записями
+            {tAdmin("subtitle")}
           </p>
         </div>
 
@@ -185,39 +187,39 @@ export function AdminView({
               setActiveTab("memorials");
               setSubTab("pending");
             }}
-            className={`px-6 py-3 text-sm font-light transition-all border-b-2 ${
+            className={`px-6 py-3 text-sm font-light transition-all border-b-2 cursor-pointer ${
               activeTab === "memorials"
                 ? "border-gold-500 text-gold-300 font-medium"
                 : "border-transparent text-ivory-200/60 hover:text-ivory-100"
             }`}
           >
-            Мемориалы ({pendingMemorials.length + approvedMemorials.length})
+            {tAdmin("tabs.memorials", { count: pendingMemorials.length + approvedMemorials.length })}
           </button>
           <button
             onClick={() => {
               setActiveTab("missing");
               setSubTab("pending");
             }}
-            className={`px-6 py-3 text-sm font-light transition-all border-b-2 ${
+            className={`px-6 py-3 text-sm font-light transition-all border-b-2 cursor-pointer ${
               activeTab === "missing"
                 ? "border-sky-500 text-sky-300 font-medium"
                 : "border-transparent text-ivory-200/60 hover:text-ivory-100"
             }`}
           >
-            Пропавшие без вести ({pendingMissing.length + approvedMissing.length})
+            {tAdmin("tabs.missing", { count: pendingMissing.length + approvedMissing.length })}
           </button>
           <button
             onClick={() => {
               setActiveTab("support");
               setSubTab("pending");
             }}
-            className={`px-6 py-3 text-sm font-light transition-all border-b-2 ${
+            className={`px-6 py-3 text-sm font-light transition-all border-b-2 cursor-pointer ${
               activeTab === "support"
                 ? "border-emerald-500 text-emerald-300 font-medium"
                 : "border-transparent text-ivory-200/60 hover:text-ivory-100"
             }`}
           >
-            Служба поддержки ({pendingTickets.length + repliedTickets.length})
+            {tAdmin("tabs.support", { count: pendingTickets.length + repliedTickets.length })}
           </button>
         </div>
 
@@ -225,7 +227,7 @@ export function AdminView({
         <div className="mb-8 flex gap-2">
           <button
             onClick={() => setSubTab("pending")}
-            className={`rounded-xl px-4 py-2 text-xs font-light transition-all border ${
+            className={`rounded-xl px-4 py-2 text-xs font-light transition-all border cursor-pointer ${
               subTab === "pending"
                 ? activeTab === "memorials"
                   ? "bg-gold-500/10 text-gold-400 border-gold-500/30"
@@ -235,18 +237,19 @@ export function AdminView({
                 : "bg-transparent text-ivory-200/50 border-white/5 hover:border-white/10 hover:text-ivory-200"
             }`}
           >
-            {activeTab === "support" ? "Новые вопросы" : "На модерации"} (
-            {activeTab === "memorials"
-              ? pendingMemorials.length
-              : activeTab === "missing"
-                ? pendingMissing.length
-                : pendingTickets.length}
-            )
+            {tAdmin("subtabs.pending", {
+              count:
+                activeTab === "memorials"
+                  ? pendingMemorials.length
+                  : activeTab === "missing"
+                    ? pendingMissing.length
+                    : pendingTickets.length,
+            })}
           </button>
 
           <button
             onClick={() => setSubTab("live")}
-            className={`rounded-xl px-4 py-2 text-xs font-light transition-all border ${
+            className={`rounded-xl px-4 py-2 text-xs font-light transition-all border cursor-pointer ${
               subTab === "live"
                 ? activeTab === "memorials"
                   ? "bg-gold-500/10 text-gold-400 border-gold-500/30"
@@ -256,13 +259,14 @@ export function AdminView({
                 : "bg-transparent text-ivory-200/50 border-white/5 hover:border-white/10 hover:text-ivory-200"
             }`}
           >
-            {activeTab === "support" ? "Отвеченные" : "Опубликованные"} (
-            {activeTab === "memorials"
-              ? approvedMemorials.length
-              : activeTab === "missing"
-                ? approvedMissing.length
-                : repliedTickets.length}
-            )
+            {tAdmin("subtabs.approved", {
+              count:
+                activeTab === "memorials"
+                  ? approvedMemorials.length
+                  : activeTab === "missing"
+                    ? approvedMissing.length
+                    : repliedTickets.length,
+            })}
           </button>
         </div>
 
@@ -339,19 +343,19 @@ export function AdminView({
                             <Button
                               disabled={isPending}
                               onClick={() => handleApproveMemorial(m.id)}
-                              className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+                              className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium cursor-pointer"
                             >
                               <Check className="h-4 w-4" />
-                              <span>Одобрить</span>
+                              <span>{tAdmin("actions.approve")}</span>
                             </Button>
                             <Button
                               disabled={isPending}
                               onClick={() => handleRejectMemorial(m.id)}
                               variant="destructive"
-                              className="gap-1.5"
+                              className="gap-1.5 cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span>Отклонить и удалить</span>
+                              <span>{tAdmin("actions.rejectDelete")}</span>
                             </Button>
                           </>
                         ) : (
@@ -360,19 +364,19 @@ export function AdminView({
                               disabled={isPending}
                               onClick={() => handleUnapproveMemorial(m.id)}
                               variant="outline"
-                              className="gap-1.5 border-white/10 text-ivory-200 hover:bg-white/5"
+                              className="gap-1.5 border-white/10 text-ivory-200 hover:bg-white/5 cursor-pointer"
                             >
                               <Undo2 className="h-4 w-4" />
-                              <span>Вернуть на модерацию</span>
+                              <span>{tAdmin("actions.returnModeration")}</span>
                             </Button>
                             <Button
                               disabled={isPending}
                               onClick={() => handleRejectMemorial(m.id)}
                               variant="destructive"
-                              className="gap-1.5"
+                              className="gap-1.5 cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span>Удалить</span>
+                              <span>{tAdmin("actions.delete")}</span>
                             </Button>
                           </>
                         )}
@@ -383,9 +387,7 @@ export function AdminView({
               </div>
             ) : (
               <div className="py-20 text-center text-sm font-light text-ivory-200/40 border border-dashed border-white/10 rounded-3xl">
-                {subTab === "pending"
-                  ? "Нет новых мемориалов на модерации."
-                  : "Опубликованные мемориалы отсутствуют."}
+                —
               </div>
             )
           ) : activeTab === "missing" ? (
@@ -424,31 +426,22 @@ export function AdminView({
                           {p.age && (
                             <div className="flex items-center gap-1.5">
                               <Activity className="h-3.5 w-3.5" />
-                              <span>Возраст: {p.age} лет</span>
+                              <span>{tAdmin("items.age", { age: p.age })}</span>
                             </div>
                           )}
                           {p.lastLocation && (
                             <div className="flex items-center gap-1.5">
                               <MapPin className="h-3.5 w-3.5" />
-                              <span>Последнее место: {p.lastLocation}</span>
+                              <span>{tAdmin("items.lastLocation", { location: p.lastLocation })}</span>
                             </div>
                           )}
                         </div>
                         {p.distinctiveFeatures && (
                           <div className="space-y-1">
                             <p className={`text-sm font-light text-ivory-200/70 ${expandedMissing[p.id] ? "" : "line-clamp-3"}`}>
-                              <span className="font-medium text-gold-400">Особые приметы:</span>{" "}
+                              <span className="font-medium text-gold-400">{tAdmin("items.distinctiveFeatures")}</span>{" "}
                               {p.distinctiveFeatures}
                             </p>
-                            {p.distinctiveFeatures.length > 180 && (
-                              <button
-                                type="button"
-                                onClick={() => setExpandedMissing((prev) => ({ ...prev, [p.id]: !prev[p.id] }))}
-                                className="text-xs font-medium text-gold-400 hover:text-gold-300 transition-colors"
-                              >
-                                {expandedMissing[p.id] ? "Свернуть" : "Читать полностью"}
-                              </button>
-                            )}
                           </div>
                         )}
                       </div>
@@ -460,19 +453,19 @@ export function AdminView({
                             <Button
                               disabled={isPending}
                               onClick={() => handleApproveMissing(p.id)}
-                              className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+                              className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium cursor-pointer"
                             >
                               <Check className="h-4 w-4" />
-                              <span>Одобрить</span>
+                              <span>{tAdmin("actions.approve")}</span>
                             </Button>
                             <Button
                               disabled={isPending}
                               onClick={() => handleRejectMissing(p.id)}
                               variant="destructive"
-                              className="gap-1.5"
+                              className="gap-1.5 cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span>Отклонить и удалить</span>
+                              <span>{tAdmin("actions.rejectDelete")}</span>
                             </Button>
                           </>
                         ) : (
@@ -481,19 +474,19 @@ export function AdminView({
                               disabled={isPending}
                               onClick={() => handleUnapproveMissing(p.id)}
                               variant="outline"
-                              className="gap-1.5 border-white/10 text-ivory-200 hover:bg-white/5"
+                              className="gap-1.5 border-white/10 text-ivory-200 hover:bg-white/5 cursor-pointer"
                             >
                               <Undo2 className="h-4 w-4" />
-                              <span>Вернуть на модерацию</span>
+                              <span>{tAdmin("actions.returnModeration")}</span>
                             </Button>
                             <Button
                               disabled={isPending}
                               onClick={() => handleRejectMissing(p.id)}
                               variant="destructive"
-                              className="gap-1.5"
+                              className="gap-1.5 cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span>Удалить</span>
+                              <span>{tAdmin("actions.delete")}</span>
                             </Button>
                           </>
                         )}
@@ -504,9 +497,7 @@ export function AdminView({
               </div>
             ) : (
               <div className="py-20 text-center text-sm font-light text-ivory-200/40 border border-dashed border-white/10 rounded-3xl">
-                {subTab === "pending"
-                  ? "Нет новых объявлений на модерации."
-                  : "Опубликованные объявления отсутствуют."}
+                —
               </div>
             )
           ) : (
@@ -523,9 +514,8 @@ export function AdminView({
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 pb-3">
                       <div className="text-xs font-light text-ivory-200/50">
-                        Отправитель:{" "}
                         <span className="font-medium text-emerald-400">
-                          {t.user?.email || "Пользователь"}
+                          {t.user?.email || "User"}
                         </span>
                       </div>
                       <div className="text-xs font-light text-ivory-200/30">
@@ -539,7 +529,7 @@ export function AdminView({
 
                     {t.adminResponse ? (
                       <div className="mt-2 space-y-1">
-                        <div className="text-xs font-medium text-gold-400">Ваш ответ:</div>
+                        <div className="text-xs font-medium text-gold-400">{tAdmin("items.yourAnswer")}</div>
                         <div className="text-sm font-light text-ivory-200/80 bg-gold-500/5 border border-gold-500/10 p-4 rounded-2xl">
                           {t.adminResponse}
                         </div>
@@ -548,7 +538,6 @@ export function AdminView({
                       <div className="mt-4 flex flex-col gap-2">
                         <textarea
                           rows={2}
-                          placeholder="Напишите ответ..."
                           value={ticketReplies[t.id] || ""}
                           onChange={(e) =>
                             setTicketReplies((prev) => ({ ...prev, [t.id]: e.target.value }))
@@ -559,14 +548,14 @@ export function AdminView({
                           <Button
                             disabled={isPending}
                             onClick={() => handleSendReply(t.id)}
-                            className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+                            className="gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium cursor-pointer"
                           >
                             {isPending ? (
                               <Loader2 className="h-3.5 w-3.5 animate-spin" />
                             ) : (
                               <Send className="h-3.5 w-3.5" />
                             )}
-                            <span>Ответить</span>
+                            <span>{tAdmin("actions.reply")}</span>
                           </Button>
                         </div>
                       </div>
