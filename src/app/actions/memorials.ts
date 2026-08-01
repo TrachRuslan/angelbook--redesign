@@ -21,6 +21,7 @@ export interface MemorialInputData {
   biography?: string | null;
   epitaph?: string | null;
   imageUrl?: string | null;
+  theme?: string;
 }
 
 function getFileExtension(fileName: string, mimeType: string): string {
@@ -143,6 +144,7 @@ export async function createMemorialRecord(
           biography: data.biography?.trim() || null,
           epitaph: data.epitaph?.trim() || null,
           imageUrl: data.imageUrl || null,
+          theme: data.theme || "CLASSIC",
           status: "PENDING", // Require re-moderation upon edit
         },
       });
@@ -157,6 +159,7 @@ export async function createMemorialRecord(
           biography: data.biography?.trim() || null,
           epitaph: data.epitaph?.trim() || null,
           imageUrl: data.imageUrl || null,
+          theme: data.theme || "CLASSIC",
           status: "PENDING",
         },
       });

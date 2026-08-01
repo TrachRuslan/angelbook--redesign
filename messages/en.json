@@ -93,7 +93,8 @@
       "notFound": "Memorial not found",
       "lightCandle": "Light a candle",
       "biography": "Biography",
-      "epitaph": "Epitaph"
+      "epitaph": "Epitaph",
+      "printPdf": "Book of Memory (PDF)"
     }
   },
   "CreateMemorial": {
@@ -121,8 +122,14 @@
     "changePhoto": "Change photo",
     "removePhoto": "Remove photo",
     "toastSuccess": "Memorial created successfully!",
-    "toastError": "Failed to create memorial. Please try again.",
-    "authRequired": "Please log in to create a memorial."
+    "authRequired": "Please log in to create a memorial.",
+    "themeLabel": "Memorial Page Theme",
+    "themes": {
+      "classic": "Classic (Dark)",
+      "starry": "Starry Sky",
+      "forest": "Forest Silence",
+      "marble": "Premium Marble"
+    }
   },
   "Cabinet": {
     "title": "My Cabinet",

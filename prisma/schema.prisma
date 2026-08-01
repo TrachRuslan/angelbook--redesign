@@ -52,6 +52,7 @@ model Memorial {
   imageUrl    String?
   candleCount Int           @default(0)
   status      PublishStatus @default(PENDING)
+  theme       String        @default("CLASSIC")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 

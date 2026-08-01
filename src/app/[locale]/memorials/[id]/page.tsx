@@ -7,6 +7,8 @@ import { formatMemorialDates } from "@/lib/memorial-format";
 import { Button } from "@/components/ui/button";
 import { CandleButton } from "@/components/ui/candle-button";
 import { QrPrintButton } from "@/components/ui/qr-print-button";
+import { PrintPdfButton } from "@/components/ui/print-pdf-button";
+import { cn } from "@/lib/utils";
 
 interface MemorialPageProps {
   params: Promise<{
@@ -102,10 +104,28 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
   const shareUrl = `${baseUrl}/${locale}/memorials/${memorial.id}`;
   const shareText = `${memorial.firstName} ${memorial.lastName} — Книга памяти`;
 
+  const theme = memorial.theme || "CLASSIC";
+  const bgClasses =
+    theme === "STARRY" ? "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950 via-slate-950 to-charcoal-950" :
+    theme === "FOREST" ? "bg-gradient-to-br from-emerald-950/60 via-zinc-950 to-charcoal-950" :
+    theme === "MARBLE" ? "bg-gradient-to-br from-stone-900 via-stone-950 to-charcoal-950" :
+    "bg-charcoal-950";
+
   return (
-    <main className="min-h-screen bg-charcoal-950 pb-24 pt-32">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2">
+    <>
+      <main className={cn("relative min-h-screen pb-24 pt-32 overflow-hidden transition-all duration-700", bgClasses)}>
+        {theme === "STARRY" && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 bg-[radial-gradient(1.5px_1.5px_at_20px_30px,#fff_100%,transparent_0),radial-gradient(1px_1px_at_60px_10px,#fff_100%,transparent_0),radial-gradient(2px_2px_at_120px_80px,#fff_80%,transparent_0),radial-gradient(1.5px_1.5px_at_220px_110px,#fff_90%,transparent_0)] bg-[size:250px_250px] opacity-20" />
+        )}
+        {theme === "FOREST" && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 bg-[radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.06),transparent_50%),radial-gradient(circle_at_top_right,rgba(16,185,129,0.03),transparent_50%)]" />
+        )}
+        {theme === "MARBLE" && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-[0.02] bg-[linear-gradient(45deg,#d4af37_25%,transparent_25%),linear-gradient(-45deg,#d4af37_25%,transparent_25%)] bg-[size:120px_120px]" />
+        )}
+
+        <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2">
           {/* Image Section */}
           <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-gold-500/15 bg-charcoal-900 shadow-2xl">
             {memorial.imageUrl ? (
@@ -167,6 +187,7 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
                 <Facebook className="h-4 w-4 text-blue-500" />
                 <span>Facebook</span>
               </a>
+              <PrintPdfButton label={t("detail.printPdf")} />
             </div>
 
             <div className="space-y-12 pt-8">
@@ -203,6 +224,101 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
           </div>
         </div>
       </div>
-    </main>
+      </main>
+
+      {/* Hidden PDF/Print Layout */}
+      <div className="hidden print-layout text-stone-900 bg-white p-12 min-h-screen flex flex-col justify-between" style={{ display: "none" }}>
+        <div className="flex flex-col items-center text-center space-y-6">
+          <div className="text-3xl font-serif tracking-[0.1em] text-stone-800">AngelBook</div>
+          <div className="text-xs uppercase tracking-[0.25em] text-stone-500 border-b border-stone-200 pb-2 w-48">
+            {locale === "uk" ? "КНИГА ПАМ'ЯТІ" : locale === "ru" ? "КНИГА ПАМЯТИ" : "BOOK OF MEMORY"}
+          </div>
+
+          {memorial.imageUrl ? (
+            <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-stone-200 shadow-sm mt-4">
+              <img
+                src={memorial.imageUrl}
+                alt={`${memorial.firstName} ${memorial.lastName}`}
+                className="h-full w-full object-cover rounded-full"
+              />
+            </div>
+          ) : (
+            <div className="h-64 w-64 rounded-full bg-stone-100 border-2 border-stone-200 flex items-center justify-center mt-4">
+              <div className="h-16 w-16 rounded-full border border-stone-300 bg-white" />
+            </div>
+          )}
+
+          <h2 className="text-4xl font-serif font-light text-stone-900 mt-6">
+            {memorial.firstName} {memorial.lastName}
+          </h2>
+          <p className="text-lg font-light text-stone-600 tracking-wide">{dates}</p>
+
+          <div className="flex items-center gap-2 text-stone-500 text-sm mt-2">
+            <span>
+              {memorial.candleCount} {t("candles")}
+            </span>
+          </div>
+
+          {memorial.epitaph && (
+            <div className="relative max-w-xl mx-auto rounded-2xl bg-stone-50 border border-stone-100 p-6 italic text-stone-700 text-center my-6">
+              <p className="text-lg font-light leading-relaxed">&ldquo;{memorial.epitaph}&rdquo;</p>
+            </div>
+          )}
+
+          <div className="max-w-2xl text-left text-stone-800 font-light leading-relaxed text-base pt-6 border-t border-stone-100 whitespace-pre-wrap">
+            {memorial.biography || "..."}
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center text-center space-y-4 pt-12 border-t border-stone-100 mt-12">
+          <div className="border border-stone-200 p-3 rounded-2xl bg-white shadow-sm">
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=000000&bgcolor=ffffff&data=${encodeURIComponent(shareUrl)}`}
+              alt="QR Code"
+              className="h-32 w-32 object-contain"
+            />
+          </div>
+          <p className="text-xs text-stone-400 max-w-xs leading-relaxed">
+            {locale === "uk"
+              ? "Відскануйте QR-код, щоб перейти на сторінку пам'яті, запалити віртуальну свічку або залишити спогад."
+              : locale === "ru"
+              ? "Отсканируйте QR-код, чтобы перейти на страницу памяти, зажечь виртуальную свечу или оставить воспоминание."
+              : "Scan the QR code to visit the memorial page, light a virtual candle, or leave a memory."}
+          </p>
+        </div>
+      </div>
+
+      {/* Print Specific CSS Style Injection */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media print {
+              body * {
+                visibility: hidden !important;
+              }
+              .print-layout,
+              .print-layout * {
+                visibility: visible !important;
+              }
+              .print-layout {
+                display: flex !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: white !important;
+                color: #1c1917 !important;
+                padding: 40px !important;
+                box-sizing: border-box !important;
+              }
+              main, header, footer, #header, #footer {
+                display: none !important;
+              }
+            }
+          `,
+        }}
+      />
+    </>
   );
 }

@@ -27,6 +27,7 @@ interface CreateMemorialFormProps {
     biography?: string | null;
     epitaph?: string | null;
     imageUrl?: string | null;
+    theme?: string | null;
   };
   onSuccess?: () => void;
 }
@@ -58,6 +59,7 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
       : "",
     biography: initialData?.biography || "",
     epitaph: initialData?.epitaph || "",
+    theme: initialData?.theme || "CLASSIC",
   });
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -167,6 +169,7 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
           biography: formData.biography.trim() || null,
           epitaph: formData.epitaph.trim() || null,
           imageUrl: finalImageUrl,
+          theme: formData.theme,
         });
 
         if (result.error) {
@@ -357,8 +360,69 @@ export function CreateMemorialForm({ initialData, onSuccess }: CreateMemorialFor
         />
       </div>
 
+      {/* Theme Selector */}
+      <div className="space-y-4 pt-6 border-t border-white/5">
+        <label className="block text-sm font-light text-ivory-200/70">
+          {t("themeLabel")}
+        </label>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            {
+              id: "CLASSIC",
+              name: t("themes.classic"),
+              previewClass: "bg-charcoal-900 border-white/10 hover:border-white/20",
+              activeClass: "ring-2 ring-gold-500/70 border-gold-500/30",
+            },
+            {
+              id: "STARRY",
+              name: t("themes.starry"),
+              previewClass: "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/60 via-slate-950 to-black border-blue-500/20 hover:border-blue-400/30",
+              activeClass: "ring-2 ring-blue-500 border-blue-400/50",
+            },
+            {
+              id: "FOREST",
+              name: t("themes.forest"),
+              previewClass: "bg-gradient-to-br from-emerald-950/60 via-zinc-950 to-black border-emerald-500/20 hover:border-emerald-400/30",
+              activeClass: "ring-2 ring-emerald-500 border-emerald-400/50",
+            },
+            {
+              id: "MARBLE",
+              name: t("themes.marble"),
+              previewClass: "bg-gradient-to-br from-neutral-900/80 via-stone-950 to-charcoal-950 border-stone-500/25 hover:border-stone-400/35",
+              activeClass: "ring-2 ring-stone-400 border-stone-300/50",
+            },
+          ].map((themeItem) => (
+            <button
+              key={themeItem.id}
+              type="button"
+              onClick={() => setFormData({ ...formData, theme: themeItem.id })}
+              className={cn(
+                "relative flex flex-col overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 cursor-pointer h-24 justify-between",
+                themeItem.previewClass,
+                formData.theme === themeItem.id ? themeItem.activeClass : "border-white/5 bg-white/[0.01]"
+              )}
+            >
+              {themeItem.id === "STARRY" && (
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(1px_1px_at_20px_30px,#fff_100%,transparent_0),radial-gradient(1px_1px_at_60px_10px,#fff_100%,transparent_0),radial-gradient(1.5px_1.5px_at_80px_50px,#fff_100%,transparent_0)] bg-[size:100px_100px]" />
+              )}
+              <span className="text-xs font-light text-ivory-100/90 relative z-10">
+                {themeItem.name}
+              </span>
+              <div className="flex justify-between items-center w-full">
+                <span className="text-[10px] uppercase tracking-wider text-ivory-200/40">
+                  {themeItem.id}
+                </span>
+                {formData.theme === themeItem.id && (
+                  <div className="h-2 w-2 rounded-full bg-gold-400 shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Submit Button */}
-      <div className="flex justify-end gap-4 pt-4">
+      <div className="flex justify-end gap-4 pt-6">
         <Button
           type="submit"
           size="lg"
