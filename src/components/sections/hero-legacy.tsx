@@ -31,7 +31,7 @@ export function HeroLegacy() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      toast.error("Пожалуйста, войдите в систему, чтобы создать мемориал.");
+      toast.error(t("authRequired"));
       router.push("/login");
       return;
     }

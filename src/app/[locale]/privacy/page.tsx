@@ -1,47 +1,58 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Privacy" });
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
+
 export default async function PrivacyPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations("Privacy");
 
   return (
     <main className="min-h-screen bg-charcoal-950 px-4 pt-28 pb-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl sm:p-12">
         <h1 className="mb-6 text-3xl font-light text-ivory-50 sm:text-4xl">
-          Политика конфиденциальности / Політика конфіденційності
+          {t("title")}
         </h1>
         <div className="space-y-6 text-sm font-light leading-relaxed text-ivory-200/70">
           <p>
-            Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональной информации пользователей сервиса AngelBook. / Ця Політика конфіденційності визначає порядок обробки та захисту персональної інформації користувачів сервісу AngelBook.
+            {t("description")}
           </p>
 
-          <h2 className="text-lg font-medium text-gold-400">1. Сбор информации / Збір інформації</h2>
+          <h2 className="text-lg font-medium text-gold-400">{t("h1")}</h2>
           <p>
-            Мы собираем минимально необходимый объем данных для обеспечения функционирования сервиса. Это включает:
+            {t("p1")}
           </p>
           <ul className="list-disc list-inside ml-4 space-y-1">
-            <li>Данные авторизации: адрес электронной почты и данные профиля, полученные через <strong>Google OAuth</strong> (при входе через учетную запись Google).</li>
-            <li>Данные, добровольно предоставляемые пользователями при создании мемориальных страниц (ФИО усопших, даты жизни, биографии, фотографии).</li>
-            <li>Данные, добровольно предоставляемые для объявлений о поиске пропавших без вести (ФИО пропавших, возраст, описание, фотографии, контакты).</li>
+            <li>{t("li1")}</li>
+            <li>{t("li2")}</li>
+            <li>{t("li3")}</li>
           </ul>
 
-          <h2 className="text-lg font-medium text-gold-400">2. Цели и защита данных / Цілі та захист даних</h2>
+          <h2 className="text-lg font-medium text-gold-400">{t("h2")}</h2>
           <p>
-            Сбор данных осуществляется исключительно в целях предоставления услуг платформы AngelBook (создание страниц памяти, организация поиска пропавших людей). Все персональные данные защищены с использованием современных стандартов шифрования и строгой политики доступа (Row Level Security в Supabase). Мы не передаем и не продаем личные данные третьим лицам.
+            {t("p2")}
           </p>
 
-          <h2 className="text-lg font-medium text-gold-400">3. Безопасность и правила использования / Безпека та правила використання</h2>
+          <h2 className="text-lg font-medium text-gold-400">{t("h3")}</h2>
           <p>
-            Сервис функционирует в соответствии со стандартными правилами безопасного использования интернет-ресурсов (safe-use guidelines). Пользователи несут ответственность за достоверность загружаемого контента и уважение к памяти других лиц. Администрация оставляет за собой право модерировать и удалять контент, нарушающий этические нормы или закон.
+            {t("p3")}
           </p>
 
-          <h2 className="text-lg font-medium text-gold-400">4. Права пользователей / Права користувачів</h2>
+          <h2 className="text-lg font-medium text-gold-400">{t("h4")}</h2>
           <p>
-            Вы имеете полное право редактировать или удалять созданные вами страницы памяти и объявления в любое время через личный кабинет пользователя, а также запрашивать удаление вашего аккаунта.
+            {t("p4")}
           </p>
         </div>
       </div>

@@ -42,7 +42,8 @@
     "preserveMemory": "Preserve the memory of a loved one",
     "createPage": "Create a page",
     "freeNoReg": "Free • No registration",
-    "searchPlaceholder": "Search by name..."
+    "searchPlaceholder": "Search by name...",
+    "authRequired": "Please log in to create a memorial."
   },
   "QuickUpload": {
     "heading": "Quick creation of a memorial page.",
@@ -51,7 +52,8 @@
     "fullNameLabel": "Full Name",
     "fullNamePlaceholder": "e.g. John Smith",
     "dateLabel": "Date of death",
-    "continue": "Continue"
+    "continue": "Continue",
+    "authRequired": "Please log in to create a memorial."
   },
   "FeaturedMemorials": {
     "eyebrow": "Recent memorials",
@@ -119,7 +121,8 @@
     "changePhoto": "Change photo",
     "removePhoto": "Remove photo",
     "toastSuccess": "Memorial created successfully!",
-    "toastError": "Failed to create memorial. Please try again."
+    "toastError": "Failed to create memorial. Please try again.",
+    "authRequired": "Please log in to create a memorial."
   },
   "Cabinet": {
     "title": "My Cabinet",
@@ -204,10 +207,27 @@
     "age": "Age",
     "years": "years",
     "reportInfo": "Details / Report info",
+    "disappearanceDate": "Date of disappearance",
     "status": {
       "searching": "Searching",
       "found": "Found"
-    }
+    },
+    "ageLabel": "Age",
+    "lastLocationLabel": "Last Location",
+    "disappearanceDateLabel": "Date of Disappearance",
+    "featuresLabel": "Distinctive Features and Description",
+    "reportTitle": "Report Information about Person",
+    "reporterNameLabel": "Your Name (optional)",
+    "reporterNamePlaceholder": "e.g. John",
+    "contactInfoLabel": "Your Phone or Email *",
+    "contactInfoPlaceholder": "Phone number or email@example.com",
+    "messageLabel": "Message / Details *",
+    "messagePlaceholder": "Describe where and when you saw the person, or any useful information...",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "send": "Send to Author",
+    "errorFields": "Please provide your contact information and details.",
+    "reportSuccess": "Information sent to the author of the listing! Thank you for your help."
   },
   "MissingCreate": {
     "step": "Step {current} of {total}",
@@ -227,6 +247,64 @@
     "uploadPhotoHint": "Drag an image or click to select",
     "back": "Back",
     "next": "Continue",
-    "submit": "Publish profile"
+    "submit": "Publish profile",
+    "authRequired": "Please log in to submit a missing person report."
+  },
+  "About": {
+    "title": "About AngelBook",
+    "subtitle": "A place where memory lives",
+    "p1": "AngelBook is a modern online platform created to preserve the memories of loved ones with dignity, warmth, and care for future generations.",
+    "p2": "Our mission is to give everyone the opportunity to create a bright, decent virtual memorial, light a virtual candle of memory, and unite the community to search for those who are missing.",
+    "p3": "The platform is designed with privacy in mind, featuring high standards of security and aesthetics."
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "description": "This Privacy Policy defines the procedure for processing and protecting personal information of users of the AngelBook service.",
+    "h1": "1. Collection of Information",
+    "p1": "We collect the minimum amount of data required to run the service. This includes:",
+    "li1": "Authorization data: email address and profile data obtained through Google OAuth (when logging in using a Google account).",
+    "li2": "Data voluntarily provided by users when creating memorial pages (full name of the deceased, dates of life, biography, photos).",
+    "li3": "Data voluntarily provided for missing persons search announcements (full name of the missing, age, description, photos, contacts).",
+    "h2": "2. Goals and Data Protection",
+    "p2": "Data collection is carried out solely for the purpose of providing services of the AngelBook platform (creating memory pages, organizing the search for missing people). All personal data is protected using modern encryption standards and strict access policies (Row Level Security in Supabase). We do not transfer or sell personal data to third parties.",
+    "h3": "3. Security and Rules of Use",
+    "p3": "The service operates in accordance with standard safe use guidelines. Users are responsible for the accuracy of uploaded content and respect for the memory of other persons. The administration reserves the right to moderate and delete content that violates ethical standards or the law.",
+    "h4": "4. User Rights",
+    "p4": "You have the full right to edit or delete the memory pages and announcements you created at any time through the user cabinet, as well as request the deletion of your account."
+  },
+  "Terms": {
+    "title": "Terms of Use",
+    "description": "Welcome to AngelBook. By using our service, you agree to the following terms.",
+    "h1": "1. Collection and Publication of Data",
+    "p1": "The platform is intended for publishing memorial pages of memory and announcements of the search for missing persons. By creating these entries, you confirm the accuracy of the information provided and guarantee that you have all the necessary rights to publish textual materials and photos of the deceased or missing persons.",
+    "h2": "2. Authorization and Profiles",
+    "p2": "To authorize on the site, users can use email or log in using Google OAuth. We use the received email address solely to identify you as the author of the created content and to ensure access control to your records in your personal cabinet.",
+    "h3": "3. Safe Use Rules",
+    "p3": "Users agree to comply with ethical standards and rules of decent behavior. It is strictly prohibited to:",
+    "li1": "Publish deliberately false, offensive, or defamatory information.",
+    "li2": "Upload malicious programs or use scripts to automatically collect data.",
+    "li3": "Use memorial pages for commercial or advertising purposes.",
+    "h4": "4. Moderation and Responsibility",
+    "p4": "The administration reserves the right to moderate all publications before their final display on the site, as well as temporarily block or permanently delete any content that violates the rules of the platform or applicable law."
+  },
+  "Support": {
+    "title": "Technical Support",
+    "subtitle": "Contact us for any questions",
+    "authRequired": "To submit a support request, you must log in first.",
+    "login": "Log in to account",
+    "messageLabel": "Your question or message *",
+    "messagePlaceholder": "Describe your issue or ask a question...",
+    "submit": "Send message",
+    "enterMessage": "Please enter a message.",
+    "success": "Message sent to technical support. The response will arrive in your cabinet."
+  },
+  "QR": {
+    "buttonLabel": "QR Code",
+    "modalTitle": "Page QR Code",
+    "instruction": "Save this code or print it to place it on a memorial plaque or photograph.",
+    "close": "Close",
+    "print": "Print",
+    "bookTitle": "Book of Memory",
+    "printInstruction": "Scan the QR code to visit the memorial page, read the biography, leave a memory, or light a candle."
   }
 }

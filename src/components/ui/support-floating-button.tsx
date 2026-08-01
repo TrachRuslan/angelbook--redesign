@@ -8,8 +8,10 @@ import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { submitSupportTicket } from "@/app/actions/support";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export function SupportFloatingButton() {
+  const t = useTranslations("Support");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -30,7 +32,7 @@ export function SupportFloatingButton() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) {
-      toast.error("Пожалуйста, введите сообщение.");
+      toast.error(t("enterMessage"));
       return;
     }
 
@@ -39,7 +41,7 @@ export function SupportFloatingButton() {
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success("Сообщение отправлено в техподдержку. Ответ придет в ваш личный кабинет.");
+        toast.success(t("success"));
         setMessage("");
         setIsOpen(false);
       }
@@ -90,8 +92,8 @@ export function SupportFloatingButton() {
                   <MessageSquare className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-ivory-50">Техническая поддержка</h3>
-                  <p className="text-xs text-ivory-200/40 font-light">Свяжитесь с нами по любому вопросу</p>
+                  <h3 className="text-lg font-medium text-ivory-50">{t("title")}</h3>
+                  <p className="text-xs text-ivory-200/40 font-light">{t("subtitle")}</p>
                 </div>
               </div>
 
@@ -100,7 +102,7 @@ export function SupportFloatingButton() {
                 <div className="text-center py-6">
                   <AlertCircle className="mx-auto h-12 w-12 text-amber-400 mb-4" />
                   <p className="text-sm font-light text-ivory-200/70 mb-6">
-                    Для отправки запроса в техподдержку вам необходимо войти в систему.
+                    {t("authRequired")}
                   </p>
                   <Button
                     onClick={() => {
@@ -109,7 +111,7 @@ export function SupportFloatingButton() {
                     }}
                     className="w-full bg-gold-500 hover:bg-gold-400 text-charcoal-950 font-medium"
                   >
-                    Войти в аккаунт
+                    {t("login")}
                   </Button>
                 </div>
               ) : (
@@ -117,14 +119,14 @@ export function SupportFloatingButton() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <label className="block text-xs text-ivory-200/60 uppercase tracking-wider font-light">
-                      Ваш вопрос или сообщение *
+                      {t("messageLabel")}
                     </label>
                     <textarea
                       rows={5}
                       required
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Опишите вашу проблему или задайте вопрос..."
+                      placeholder={t("messagePlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/35 focus:border-sky-500/50 focus:outline-none resize-none"
                     />
                   </div>
@@ -137,7 +139,7 @@ export function SupportFloatingButton() {
                     {isPending ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
-                      <span>Отправить сообщение</span>
+                      <span>{t("submit")}</span>
                     )}
                   </Button>
                 </form>

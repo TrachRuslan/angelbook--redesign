@@ -3,7 +3,7 @@ export function formatMemorialDates(
   dateOfDeath: Date | null,
   locale: string
 ): string {
-  const intlLocale = locale === "ru" ? "ru-RU" : "en-US";
+  const intlLocale = locale === "ru" ? "ru-RU" : locale === "uk" ? "uk-UA" : "en-US";
 
   const formatYear = (date: Date) =>
     date.toLocaleDateString(intlLocale, { year: "numeric" });

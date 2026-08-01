@@ -6,6 +6,7 @@ import { prisma } from "@/utils/prisma";
 import { formatMemorialDates } from "@/lib/memorial-format";
 import { Button } from "@/components/ui/button";
 import { CandleButton } from "@/components/ui/candle-button";
+import { QrPrintButton } from "@/components/ui/qr-print-button";
 
 interface MemorialPageProps {
   params: Promise<{
@@ -142,13 +143,12 @@ export default async function MemorialPage({ params }: MemorialPageProps) {
                 buttonLabel={t("detail.lightCandle")}
                 candlesLabel={t("candles")}
               />
-              <Button
-                variant="ghost"
-                className="h-14 px-6 text-ivory-200/60 hover:text-ivory-50"
-              >
-                <Heart className="mr-2 h-5 w-5" />
-                {/* Could add a "Follow" or "Remember" feature later */}
-              </Button>
+              <QrPrintButton
+                pageUrl={shareUrl}
+                fullName={`${memorial.firstName} ${memorial.lastName}`}
+                dates={dates}
+                imageUrl={memorial.imageUrl}
+              />
               <a
                 href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`}
                 target="_blank"

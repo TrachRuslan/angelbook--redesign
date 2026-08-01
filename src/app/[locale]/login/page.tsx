@@ -37,6 +37,153 @@ function GoogleIcon() {
   );
 }
 
+function AngelAnimatedLogo() {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+      <div className="relative flex items-center justify-center">
+        {/* Soft background golden glow */}
+        <div className="absolute h-96 w-96 rounded-full bg-gold-500/5 blur-3xl" />
+        <div className="absolute h-[500px] w-[500px] rounded-full bg-sky-500/5 blur-3xl" />
+
+        {/* Slow rotating thin golden star rings */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="absolute h-72 w-72 rounded-full border border-gold-500/10 border-dashed"
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="absolute h-96 w-96 rounded-full border border-sky-400/5 border-dashed"
+        />
+
+        {/* Big animated SVG Logo */}
+        <motion.div
+          animate={{
+            y: [-10, 10, -10],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="relative z-10 flex flex-col items-center gap-6"
+        >
+          <svg
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-48 w-48 shrink-0 filter drop-shadow-[0_0_24px_rgba(125,211,252,0.35)]"
+          >
+            {/* Golden Oval Halo floating and glowing */}
+            <motion.ellipse
+              animate={{
+                stroke: ["#E6C265", "#ffd700", "#E6C265"],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              cx="60"
+              cy="14"
+              rx="21"
+              ry="6"
+              stroke="#E6C265"
+              strokeWidth="4"
+              strokeLinecap="round"
+              transform="rotate(-5 60 14)"
+            />
+
+            {/* Light Blue Head Circle */}
+            <motion.circle
+              animate={{
+                stroke: ["#7DD3FC", "#38bdf8", "#7DD3FC"],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              cx="67"
+              cy="36"
+              r="14"
+              stroke="#7DD3FC"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+
+            {/* Upper Wing Feather */}
+            <motion.path
+              animate={{
+                stroke: ["#7DD3FC", "#38bdf8", "#7DD3FC"],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              d="M 23 27 C 32 38, 44 48, 58 55"
+              stroke="#7DD3FC"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+
+            {/* Lower Wing Feather */}
+            <motion.path
+              animate={{
+                stroke: ["#7DD3FC", "#38bdf8", "#7DD3FC"],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.2,
+              }}
+              d="M 26 42 C 34 50, 44 56, 52 58"
+              stroke="#7DD3FC"
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
+
+            {/* Main Wing Outer Curve into Body Swoop */}
+            <motion.path
+              animate={{
+                stroke: ["#7DD3FC", "#38bdf8", "#7DD3FC"],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              d="M 19 25 C 24 45, 34 68, 43 75 C 52 82, 60 92, 59 93 C 65 80, 75 62, 72 49"
+              stroke="#7DD3FC"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+
+          {/* Animated floating typography */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="flex flex-col items-center gap-1.5"
+          >
+            <span className="text-3xl font-light tracking-[0.2em] text-ivory-50 uppercase">
+              AngelBook
+            </span>
+            <span className="text-xs font-light tracking-[0.4em] text-gold-400/60 uppercase">
+              Memory Space
+            </span>
+          </motion.div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 type AuthMode = "signIn" | "signUp";
 
 function LoginContent() {
@@ -102,6 +249,7 @@ function LoginContent() {
           <div className="absolute inset-0 bg-gradient-to-br from-charcoal-950 via-charcoal-900 to-charcoal-800" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_30%_40%,rgba(196,169,98,0.08),transparent_70%)]" />
           <FloatingParticles />
+          <AngelAnimatedLogo />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

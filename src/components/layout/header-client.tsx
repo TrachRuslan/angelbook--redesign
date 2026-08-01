@@ -1,8 +1,8 @@
 "use client";
 
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, ChevronDown, Globe } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signOut } from "@/app/actions/auth";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { AngelLogo } from "@/components/ui/logo";
@@ -26,6 +26,18 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setLangDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,26 +136,45 @@ export function HeaderClient({ isAuthenticated }: HeaderClientProps) {
             <Search className="h-4 w-4" strokeWidth={1.5} />
           </button>
 
-          <div
-            className="flex items-center rounded-full border border-white/10 bg-white/5 p-0.5"
-            role="group"
-            aria-label={t("languageAriaLabel")}
-          >
-            {routing.locales.map((loc) => (
-              <button
-                key={loc}
-                type="button"
-                onClick={() => switchLocale(loc)}
-                className={cn(
-                  "rounded-full px-2.5 py-1 text-xs font-medium uppercase tracking-wide transition-all duration-300 sm:px-3 sm:text-sm",
-                  locale === loc
-                    ? "bg-gold-500/20 text-gold-400"
-                    : "text-ivory-200/60 hover:text-ivory-100"
-                )}
-              >
-                {loc.toUpperCase()}
-              </button>
-            ))}
+          <div ref={langRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium tracking-wide text-ivory-200/80 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-ivory-100 sm:px-3.5 sm:py-2 sm:text-sm"
+            >
+              <Globe className="h-3.5 w-3.5 opacity-60" />
+              <span>{locale === "uk" ? "UA" : locale.toUpperCase()}</span>
+              <ChevronDown className={cn("h-3 w-3 opacity-60 transition-transform duration-300", langDropdownOpen && "rotate-180")} />
+            </button>
+
+            {langDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-32 origin-top-right rounded-2xl border border-white/15 bg-charcoal-900 p-1.5 shadow-2xl backdrop-blur-xl">
+                <div className="flex flex-col gap-1">
+                  {routing.locales.map((loc) => {
+                    const label = loc === "uk" ? "UA" : loc.toUpperCase();
+                    const isSelected = locale === loc;
+                    return (
+                      <button
+                        key={loc}
+                        type="button"
+                        onClick={() => {
+                          switchLocale(loc);
+                          setLangDropdownOpen(false);
+                        }}
+                        className={cn(
+                          "w-full text-left rounded-xl px-3 py-2 text-xs sm:text-sm font-medium transition-all duration-200",
+                          isSelected
+                            ? "bg-gold-500/10 text-gold-400"
+                            : "text-ivory-200/60 hover:bg-white/5 hover:text-ivory-100"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {isAuthenticated ? (

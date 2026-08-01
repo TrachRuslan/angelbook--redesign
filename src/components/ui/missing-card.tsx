@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { submitMissingReport } from "@/app/actions/missing";
+import { QrPrintButton } from "@/components/ui/qr-print-button";
 
 export type MissingPersonStatus = "SEARCHING" | "FOUND";
 
@@ -63,17 +64,20 @@ export function MissingCard({
 
   const formattedDate = disappearanceDate
     ? new Date(disappearanceDate).toLocaleDateString(
-        locale === "ru" ? "ru-RU" : "en-US",
+        locale === "ru" ? "ru-RU" : locale === "uk" ? "uk-UA" : "en-US",
         { day: "numeric", month: "long", year: "numeric" }
       )
     : "";
+
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://www.angelbook.org";
+  const searchUrl = `${baseUrl}/${locale}/search?q=${encodeURIComponent(fullName)}`;
 
   const handleReportSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!id) return;
 
     if (!contactInfo.trim() || !message.trim()) {
-      toast.error("Пожалуйста, укажите ваши контакты и текст сообщения.");
+      toast.error(t("errorFields"));
       return;
     }
 
@@ -88,7 +92,7 @@ export function MissingCard({
       if (res.error) {
         toast.error(res.error);
       } else {
-        toast.success("Информация отправлена автору объявления! Спасибо за помощь.");
+        toast.success(t("reportSuccess"));
         setIsModalOpen(false);
         setReporterName("");
         setContactInfo("");
@@ -239,28 +243,36 @@ export function MissingCard({
                   </div>
                 )}
                 <div className="flex-1 space-y-3">
-                  <h4 className="text-2xl font-light text-ivory-100">{fullName}</h4>
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <h4 className="text-2xl font-light text-ivory-100">{fullName}</h4>
+                    <QrPrintButton
+                      pageUrl={searchUrl}
+                      fullName={fullName}
+                      dates={disappearanceDate ? `${t("disappearanceDate")}: ${formattedDate}` : ""}
+                      imageUrl={photoUrl}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 gap-2 text-sm font-light text-ivory-200/60">
                     {age ? (
                       <p>
-                        <span className="font-medium text-gold-400">Возраст:</span> {age} {t("years")}
+                        <span className="font-medium text-gold-400">{t("ageLabel")}:</span> {age} {t("years")}
                       </p>
                     ) : null}
                     {lastLocation ? (
                       <p>
-                        <span className="font-medium text-gold-400">Последнее местонахождение:</span> {lastLocation}
+                        <span className="font-medium text-gold-400">{t("lastLocationLabel")}:</span> {lastLocation}
                       </p>
                     ) : null}
                     {formattedDate ? (
                       <p>
-                        <span className="font-medium text-gold-400">Дата исчезновения:</span> {formattedDate}
+                        <span className="font-medium text-gold-400">{t("disappearanceDateLabel")}:</span> {formattedDate}
                       </p>
                     ) : null}
                   </div>
                   {distinctiveFeatures && (
                     <div className="pt-2">
                       <h5 className="text-xs font-semibold uppercase tracking-wider text-ivory-200/50 mb-1">
-                        Особые приметы и описание
+                        {t("featuresLabel")}
                       </h5>
                       <p className="text-sm font-light leading-relaxed text-ivory-100/80 bg-white/5 p-4 rounded-xl border border-white/5 whitespace-pre-wrap">
                         {distinctiveFeatures}
@@ -273,46 +285,46 @@ export function MissingCard({
               {/* Sighting Report Form */}
               <div className="pt-6">
                 <h4 className="text-lg font-light text-ivory-50 mb-4">
-                  Сообщить информацию о человеке
+                  {t("reportTitle")}
                 </h4>
                 <form onSubmit={handleReportSubmit} className="space-y-4">
                   <div>
                     <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                      Ваше имя (необязательно)
+                      {t("reporterNameLabel")}
                     </label>
                     <input
                       type="text"
                       value={reporterName}
                       onChange={(e) => setReporterName(e.target.value)}
-                      placeholder="Например, Александр"
+                      placeholder={t("reporterNamePlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                      Ваш Телефон или Email *
+                      {t("contactInfoLabel")}
                     </label>
                     <input
                       type="text"
                       required
                       value={contactInfo}
                       onChange={(e) => setContactInfo(e.target.value)}
-                      placeholder="Номер телефона или email@example.com"
+                      placeholder={t("contactInfoPlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs text-ivory-200/60 uppercase mb-1 font-light">
-                      Сообщение / Подробности *
+                      {t("messageLabel")}
                     </label>
                     <textarea
                       required
                       rows={3}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Опишите, где и когда видели человека, или любую полезную информацию..."
+                      placeholder={t("messagePlaceholder")}
                       className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-ivory-100 placeholder:text-ivory-200/30 focus:border-gold-500/50 focus:outline-none resize-none"
                     />
                   </div>
@@ -323,18 +335,18 @@ export function MissingCard({
                       variant="outline"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      Отмена
+                      {t("cancel")}
                     </Button>
                     <Button type="submit" disabled={isPending} className="gap-2">
                       {isPending ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Отправка...</span>
+                          <span>{t("sending")}</span>
                         </>
                       ) : (
                         <>
                           <Send className="h-4 w-4" />
-                          <span>Отправить автору</span>
+                          <span>{t("send")}</span>
                         </>
                       )}
                     </Button>

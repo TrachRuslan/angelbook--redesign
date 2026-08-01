@@ -63,7 +63,7 @@ export default function CreateMissingPersonPage() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      toast.error("Пожалуйста, войдите в систему, чтобы подать объявление о пропаже.");
+      toast.error(t("authRequired"));
       router.push("/login");
       return;
     }

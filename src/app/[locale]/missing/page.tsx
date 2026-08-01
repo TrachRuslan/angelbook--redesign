@@ -1,24 +1,28 @@
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getMissingPersons } from "@/app/actions/missing";
 import { MissingCard } from "@/components/ui/missing-card";
 import { MISSING_PERSONS } from "@/lib/missing-persons-data";
 import { Search } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { buttonVariants } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Поиск пропавших без вести",
-  description: "База данных и поиск пропавших без вести людей. Помогите найти пропавших и сообщите имеющуюся информацию.",
-};
-
 interface MissingPersonsPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ q?: string; query?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: MissingPersonsPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Missing" });
+  return {
+    title: `${t("title")} | AngelBook`,
+    description: t("subtitle"),
+  };
 }
 
 export default async function MissingPersonsPage({
@@ -30,6 +34,7 @@ export default async function MissingPersonsPage({
   const searchTerm = (q || query || "").trim();
 
   setRequestLocale(locale);
+  const t = await getTranslations("Missing");
 
   const dbPersons = await getMissingPersons(searchTerm);
 
@@ -69,17 +74,17 @@ export default async function MissingPersonsPage({
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-12 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-steel-400/60">
-            ПРОПАВШИЕ БЕЗ ВЕСТИ
+            {t("eyebrow")}
           </p>
           <h1 className="mt-4 text-4xl font-light tracking-tight text-ivory-100 sm:text-5xl">
-            Поиск пропавших
+            {t("title")}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base font-light tracking-wide text-steel-300/55 sm:text-lg">
-            Помогите найти тех, кто пропал без вести
+            {t("subtitle")}
           </p>
           <div className="mt-8">
             <Link href="/missing/create" className={buttonVariants({ size: "lg" })}>
-              Сообщить о пропаже
+              {t("createCta")}
             </Link>
           </div>
         </header>
@@ -95,7 +100,7 @@ export default async function MissingPersonsPage({
               type="search"
               name="q"
               defaultValue={searchTerm}
-              placeholder="Поиск по имени или местоположению..."
+              placeholder={t("searchPlaceholder")}
               className="w-full rounded-2xl border border-white/10 bg-white/5 py-4 pl-14 pr-5 text-base text-ivory-100 placeholder:text-steel-400/35 backdrop-blur-md transition-all duration-300 hover:border-white/15 hover:bg-white/[0.07] focus:border-steel-400/25 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-steel-400/15"
             />
           </label>
@@ -109,7 +114,7 @@ export default async function MissingPersonsPage({
           </div>
         ) : (
           <p className="py-20 text-center text-sm font-light tracking-wide text-steel-400/45">
-            Ничего не найдено
+            {t("empty")}
           </p>
         )}
       </div>
